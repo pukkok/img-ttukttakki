@@ -4,53 +4,73 @@ import NavigationButtons from './components/NavigationButtons'
 import ShapeSelector from './components/ShapeSelector'
 import ShapeRadiusControl from './components/ShapeRadiusControl'
 import getMaskedCanvas from './utils/getMaskedCanvas'
-import Sidebar from './components/sidebar' // ← 디렉토리 구조 반영됨
+import Sidebar from './components/sidebar'
 
 const App = () => {
   const [images, setImages] = useState([])
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentImageId, setCurrentImageId] = useState(null)
   const [background, setBackground] = useState('transparent')
   const [roundedRadius, setRoundedRadius] = useState(20)
-
-  const [cropStates, setCropStates] = useState([])
+  const [cropStates, setCropStates] = useState({}) // id 기반
 
   const handleSetImages = (newImages) => {
+    const cropMap = {}
+    newImages.forEach(img => {
+      cropMap[img.id] = {
+        offset: { x: 0, y: 0 },
+        scale: 1,
+        shape: '원형',
+        shapeOptions: {}
+      }
+    })
+
     setImages(newImages)
-    setCurrentIndex(0)
-    setCropStates(newImages.map(() => ({
-      offset: { x: 0, y: 0 },
-      scale: 1,
-      shape: '원형',
-      shapeOptions: {}
-    })))
+    setCropStates(cropMap)
+    setCurrentImageId(newImages[0]?.id || null)
   }
 
   const updateCurrentCrop = (newData) => {
-    setCropStates(prev => {
-      const next = [...prev]
-      next[currentIndex] = { ...next[currentIndex], ...newData }
-      return next
-    })
+    if (!currentImageId) return
+    setCropStates(prev => ({
+      ...prev,
+      [currentImageId]: {
+        ...prev[currentImageId],
+        ...newData
+      }
+    }))
   }
 
-  const getCanvas = (index = currentIndex) => {
-    const image = images[index]
-    const crop = cropStates[index] || {}
-    const imageShape = crop.shape || '원형'
-    const imageShapeOptions = crop.shapeOptions || {}
+  const handleDeleteImage = (idToDelete) => {
+    const updatedImages = images.filter(img => img.id !== idToDelete)
+    const newCropStates = { ...cropStates }
+    delete newCropStates[idToDelete]
+
+    setImages(updatedImages)
+    setCropStates(newCropStates)
+
+    if (idToDelete === currentImageId) {
+      setCurrentImageId(updatedImages[0]?.id || null)
+    }
+  }
+
+  const getCanvas = async (targetId = currentImageId) => {
+    const image = images.find(img => img.id === targetId)
+    const crop = cropStates[targetId]
+    if (!image || !crop) return null
 
     return getMaskedCanvas({
       image,
-      shape: imageShape,
+      shape: crop.shape || '원형',
       background,
       offset: crop.offset,
       scale: crop.scale,
-      shapeOptions: imageShapeOptions
+      shapeOptions: crop.shapeOptions || {}
     })
   }
 
+  const currentIndex = images.findIndex(img => img.id === currentImageId)
   const currentImage = images[currentIndex] || null
-  const currentCrop = cropStates[currentIndex] || {
+  const currentCrop = cropStates[currentImageId] || {
     offset: { x: 0, y: 0 },
     scale: 1,
     shape: '원형',
@@ -59,7 +79,6 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-[#111] text-white flex flex-col md:flex-row">
-      {/* 왼쪽: 작업 영역 */}
       <main className="flex-1 px-4 py-8 max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold text-center mb-6">🖼️ 이미지 도형 자르기</h1>
 
@@ -98,21 +117,27 @@ const App = () => {
         <NavigationButtons
           currentIndex={currentIndex}
           total={images.length}
-          onPrev={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
-          onNext={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
+          onPrev={() => {
+            if (currentIndex > 0) {
+              setCurrentImageId(images[currentIndex - 1].id)
+            }
+          }}
+          onNext={() => {
+            if (currentIndex < images.length - 1) {
+              setCurrentImageId(images[currentIndex + 1].id)
+            }
+          }}
         />
       </main>
 
-      {/* 오른쪽: 사이드바 */}
       <Sidebar 
-        onImagesSelected={handleSetImages} 
-        
+        onImagesSelected={handleSetImages}
         images={images}
-        currentIndex={currentIndex}
+        currentImageId={currentImageId}
         shape={currentCrop.shape}
-        background={background}
         getCanvas={getCanvas}
-        onSelectIndex={setCurrentIndex}
+        onSelectImageId={setCurrentImageId}
+        onDeleteImageId={handleDeleteImage}
       />
     </div>
   )
