@@ -1,6 +1,6 @@
 const NavigationButtons = ({ currentIndex, total, onPrev, onNext }) => {
   return (
-    <div className="mt-6 flex items-center justify-center gap-6">
+    <div className="flex items-center justify-center gap-6">
       <button
         className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-40"
         onClick={onPrev}
