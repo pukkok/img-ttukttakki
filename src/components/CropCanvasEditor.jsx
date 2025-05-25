@@ -12,7 +12,7 @@ const CropCanvasEditor = ({
   shapeOptions = {},
 }) => {
   const canvasRef = useRef(null)
-  const size = 400
+  const size = 500
   const draggingRef = useRef(false)
   const lastPosRef = useRef({ x: 0, y: 0 })
 
@@ -64,13 +64,6 @@ const CropCanvasEditor = ({
     draggingRef.current = false
   }
 
-  const handleScaleInput = (e) => {
-    const value = parseFloat(e.target.value)
-    if (!isNaN(value)) {
-      onScaleChange(Math.min(Math.max(value, 0.1), 5))
-    }
-  }
-
   const handleWheel = useCallback(
     (e) => {
       e.preventDefault()
@@ -94,34 +87,18 @@ const CropCanvasEditor = ({
   }, [handleWheel])
 
   return (
-    <div className="mt-6 flex flex-col items-center gap-4">
-      <div className="relative w-[400px] h-[400px]">
-        <div className="absolute inset-0 bg-transparent-grid rounded pointer-events-none z-0" />
-        <canvas
-          ref={canvasRef}
-          width={size}
-          height={size}
-          className="relative z-10 border rounded shadow-lg cursor-move"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-        />
-      </div>
-
-      <div className="flex items-center gap-2 text-sm text-gray-300">
-        <label>확대/축소:</label>
-        <input
-          type="range"
-          min="0.1"
-          max="5"
-          step="0.05"
-          value={scale}
-          onChange={handleScaleInput}
-          className="w-40"
-        />
-        <span>{scale.toFixed(2)}x</span>
-      </div>
+    <div className="relative w-[500px] h-[500px] mt-6">
+      <div className="absolute inset-0 bg-transparent-grid rounded pointer-events-none z-0" />
+      <canvas
+        ref={canvasRef}
+        width={size}
+        height={size}
+        className="relative z-10 border rounded shadow-lg cursor-move"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      />
     </div>
   )
 }
