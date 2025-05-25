@@ -64,7 +64,7 @@ const App = () => {
       offset: crop.offset,
       scale: crop.scale,
       shapeOptions: crop.shapeOptions || {},
-      size: 500  // ✅ 미리보기 사이즈 명시적으로 전달!
+      size: 500
     })
   }
 
@@ -78,13 +78,20 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#111] text-white flex flex-col md:flex-row">
-      {/* 왼쪽: 작업 영역 */}
-      <main className="flex flex-col md:flex-row flex-1 gap-6 px-4 py-8 max-w-6xl mx-auto">
-        {/* 왼쪽 작업 화면 */}
-        <div>
-          <h1 className="text-2xl text-center font-bold mb-6">🖼️ 이미지 도형 자르기</h1>
+    <div className="flex h-screen bg-[#111] text-white overflow-hidden">
+      {/* 왼쪽 전체 콘텐츠: 헤더 + 미리보기 + 푸터 */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* 헤더: 도구 패널 */}
+        <header className="w-full border-b border-gray-800">
+          <EditorPanel
+            crop={currentCrop}
+            onChange={updateCurrentCrop}
+            roundedRadius={roundedRadius}
+          />
+        </header>
 
+        {/* 미리보기 */}
+        <main className="flex-1 flex flex-col items-center justify-center overflow-auto px-4 py-8">
           <CropCanvasEditor
             image={currentImage}
             shape={currentCrop.shape}
@@ -95,32 +102,30 @@ const App = () => {
             onScaleChange={(scale) => updateCurrentCrop({ scale })}
             shapeOptions={currentCrop.shapeOptions || {}}
           />
+        </main>
 
-          <NavigationButtons
-            currentIndex={currentIndex}
-            total={images.length}
-            onPrev={() => {
-              if (currentIndex > 0) {
-                setCurrentImageId(images[currentIndex - 1].id)
-              }
-            }}
-            onNext={() => {
-              if (currentIndex < images.length - 1) {
-                setCurrentImageId(images[currentIndex + 1].id)
-              }
-            }}
-          />
-        </div>
+        {/* 푸터: 페이지네이션 */}
+        <footer className="w-full border-t border-gray-800 py-4">
+          <div className="max-w-screen-lg mx-auto px-4">
+            <NavigationButtons
+              currentIndex={currentIndex}
+              total={images.length}
+              onPrev={() => {
+                if (currentIndex > 0) {
+                  setCurrentImageId(images[currentIndex - 1].id)
+                }
+              }}
+              onNext={() => {
+                if (currentIndex < images.length - 1) {
+                  setCurrentImageId(images[currentIndex + 1].id)
+                }
+              }}
+            />
+          </div>
+        </footer>
+      </div>
 
-        {/* 오른쪽: 편집 도구 패널 */}
-        <EditorPanel
-          crop={currentCrop}
-          onChange={updateCurrentCrop}
-          roundedRadius={roundedRadius}
-        />
-      </main>
-
-      {/* 오른쪽 사이드바 */}
+      {/* 오른쪽 고정 사이드바 */}
       <Sidebar
         onImagesSelected={handleSetImages}
         images={images}
