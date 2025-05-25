@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { generateId } from '../../utils/generateId' // 상대경로 주의
 
 const ImageUploader = ({ onImagesSelected }) => {
   const fileInputRef = useRef(null)
@@ -10,7 +11,12 @@ const ImageUploader = ({ onImagesSelected }) => {
     const readers = imageFiles.map(file => {
       return new Promise((resolve) => {
         const reader = new FileReader()
-        reader.onload = () => resolve({ name: file.name, url: reader.result })
+        reader.onload = () =>
+          resolve({
+            id: generateId(file.name),
+            name: file.name,
+            url: reader.result
+          })
         reader.readAsDataURL(file)
       })
     })
