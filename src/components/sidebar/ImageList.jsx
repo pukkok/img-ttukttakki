@@ -7,6 +7,7 @@ const ImageList = ({ images, currentIndex, onSelect }) => {
           onClick={() => onSelect(index)}
           className={`flex items-center gap-3 p-2 rounded-lg text-left transition border border-gray-700 hover:bg-gray-700
             ${index === currentIndex ? 'bg-gray-700' : ''}`}
+          title={img.name}
         >
           <img
             src={img.url}
