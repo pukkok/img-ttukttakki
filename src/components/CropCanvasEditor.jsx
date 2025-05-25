@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
+import getShapePath from '../utils/getShapePath'
 
-const CropCanvasEditor = ({ image, shape = 'circle', background = 'transparent', offset, scale, onOffsetChange, onScaleChange }) => {
+const CropCanvasEditor = ({ image, shape = '원형', background = 'transparent', offset, scale, onOffsetChange, onScaleChange, shapeOptions = {} }) => {
   const canvasRef = useRef(null)
   const size = 400
   const draggingRef = useRef(false)
@@ -18,13 +19,8 @@ const CropCanvasEditor = ({ image, shape = 'circle', background = 'transparent',
       canvas.height = size
 
       ctx.save()
-      ctx.beginPath()
-      if (shape === 'circle') {
-        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2)
-      } else {
-        ctx.rect(0, 0, size, size)
-      }
-      ctx.clip()
+      const shapePath = getShapePath(shape, size, shapeOptions)
+      ctx.clip(shapePath)
 
       const drawWidth = img.width * scale
       const drawHeight = img.height * scale
@@ -35,17 +31,12 @@ const CropCanvasEditor = ({ image, shape = 'circle', background = 'transparent',
       ctx.setLineDash([6, 6])
       ctx.strokeStyle = '#aaa'
       ctx.lineWidth = 2
-      if (shape === 'circle') {
-        ctx.arc(size / 2, size / 2, size / 2 - 1, 0, Math.PI * 2)
-      } else {
-        ctx.rect(1, 1, size - 2, size - 2)
-      }
-      ctx.stroke()
+      ctx.stroke(getShapePath(shape, size, shapeOptions))
       ctx.setLineDash([])
     }
   }
 
-  useEffect(drawCanvas, [image, offset, scale, shape, background])
+  useEffect(drawCanvas, [image, offset, scale, shape, background, shapeOptions])
 
   const handleMouseDown = (e) => {
     draggingRef.current = true
