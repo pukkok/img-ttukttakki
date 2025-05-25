@@ -25,7 +25,7 @@ const getShapePath = (shape, size, options = {}) => {
   } else if (shape === '원형') {
     path.arc(x, y, r, 0, Math.PI * 2)
 
-  } else if (shape === '둥근 모서리') {
+  } else if (shape === '사각형(둥근 모서리)') {
     const pad = 0
     const w = size - pad * 2
     const h = size - pad * 2

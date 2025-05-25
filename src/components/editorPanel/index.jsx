@@ -13,7 +13,7 @@ const EditorPanel = ({ crop, onChange, roundedRadius }) => {
             onChange({
               shape: newShape,
               shapeOptions:
-                newShape === '둥근 모서리' ? { radius: roundedRadius } : {}
+                newShape === '사각형(둥근 모서리)' ? { radius: roundedRadius } : {}
             })
           }
         />
@@ -26,7 +26,7 @@ const EditorPanel = ({ crop, onChange, roundedRadius }) => {
           onChange={(scale) => onChange({ scale })}
         />
 
-        {crop.shape === '둥근 모서리' && (
+        {crop.shape === '사각형(둥근 모서리)' && (
           <ShapeRadiusControl
             radius={crop.shapeOptions?.radius || 0}
             onChange={(radius) => onChange({ shapeOptions: { radius } })}
