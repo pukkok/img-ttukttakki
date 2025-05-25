@@ -1,17 +1,16 @@
 import { useState } from 'react'
 import CropCanvasEditor from './components/CropCanvasEditor'
 import NavigationButtons from './components/NavigationButtons'
-import ShapeSelector from './components/ShapeSelector'
-import ShapeRadiusControl from './components/ShapeRadiusControl'
-import getMaskedCanvas from './utils/getMaskedCanvas'
+import EditorPanel from './components/editorPanel'
 import Sidebar from './components/sidebar'
+import getMaskedCanvas from './utils/getMaskedCanvas'
 
 const App = () => {
   const [images, setImages] = useState([])
   const [currentImageId, setCurrentImageId] = useState(null)
   const [background, setBackground] = useState('transparent')
   const [roundedRadius, setRoundedRadius] = useState(20)
-  const [cropStates, setCropStates] = useState({}) // id 기반
+  const [cropStates, setCropStates] = useState({})
 
   const handleSetImages = (newImages) => {
     const cropMap = {}
@@ -64,7 +63,8 @@ const App = () => {
       background,
       offset: crop.offset,
       scale: crop.scale,
-      shapeOptions: crop.shapeOptions || {}
+      shapeOptions: crop.shapeOptions || {},
+      size: 500  // ✅ 미리보기 사이즈 명시적으로 전달!
     })
   }
 
@@ -79,58 +79,49 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-[#111] text-white flex flex-col md:flex-row">
-      <main className="flex-1 px-4 py-8 max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold text-center mb-6">🖼️ 이미지 도형 자르기</h1>
+      {/* 왼쪽: 작업 영역 */}
+      <main className="flex flex-col md:flex-row flex-1 gap-6 px-4 py-8 max-w-6xl mx-auto">
+        {/* 왼쪽 작업 화면 */}
+        <div>
+          <h1 className="text-2xl text-center font-bold mb-6">🖼️ 이미지 도형 자르기</h1>
 
-        {images.length > 0 && (
-          <ShapeSelector
+          <CropCanvasEditor
+            image={currentImage}
             shape={currentCrop.shape}
-            onChange={(newShape) =>
-              updateCurrentCrop({
-                shape: newShape,
-                shapeOptions: newShape === '둥근 모서리' ? { radius: roundedRadius } : {},
-              })
-            }
+            background={background}
+            offset={currentCrop.offset}
+            scale={currentCrop.scale}
+            onOffsetChange={(offset) => updateCurrentCrop({ offset })}
+            onScaleChange={(scale) => updateCurrentCrop({ scale })}
+            shapeOptions={currentCrop.shapeOptions || {}}
           />
-        )}
 
-        <div className="min-h-6">
-          {currentCrop.shape === '둥근 모서리' && (
-            <ShapeRadiusControl
-              radius={currentCrop.shapeOptions?.radius || 0}
-              onChange={(radius) => updateCurrentCrop({ shapeOptions: { radius } })}
-            />
-          )}
+          <NavigationButtons
+            currentIndex={currentIndex}
+            total={images.length}
+            onPrev={() => {
+              if (currentIndex > 0) {
+                setCurrentImageId(images[currentIndex - 1].id)
+              }
+            }}
+            onNext={() => {
+              if (currentIndex < images.length - 1) {
+                setCurrentImageId(images[currentIndex + 1].id)
+              }
+            }}
+          />
         </div>
 
-        <CropCanvasEditor
-          image={currentImage}
-          shape={currentCrop.shape}
-          background={background}
-          offset={currentCrop.offset}
-          scale={currentCrop.scale}
-          onOffsetChange={(offset) => updateCurrentCrop({ offset })}
-          onScaleChange={(scale) => updateCurrentCrop({ scale })}
-          shapeOptions={currentCrop.shapeOptions || {}}
-        />
-
-        <NavigationButtons
-          currentIndex={currentIndex}
-          total={images.length}
-          onPrev={() => {
-            if (currentIndex > 0) {
-              setCurrentImageId(images[currentIndex - 1].id)
-            }
-          }}
-          onNext={() => {
-            if (currentIndex < images.length - 1) {
-              setCurrentImageId(images[currentIndex + 1].id)
-            }
-          }}
+        {/* 오른쪽: 편집 도구 패널 */}
+        <EditorPanel
+          crop={currentCrop}
+          onChange={updateCurrentCrop}
+          roundedRadius={roundedRadius}
         />
       </main>
 
-      <Sidebar 
+      {/* 오른쪽 사이드바 */}
+      <Sidebar
         onImagesSelected={handleSetImages}
         images={images}
         currentImageId={currentImageId}
