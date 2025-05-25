@@ -1,14 +1,18 @@
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 
-const DownloadButtons = ({ images, currentIndex, shape, getCanvas }) => {
+const DownloadButtons = ({ images, currentImageId, shape, getCanvas }) => {
+  const currentImage = images.find((img) => img.id === currentImageId)
+
   const handleSaveCurrent = async () => {
-    const canvas = await getCanvas()
+    if (!currentImage) return
+
+    const canvas = await getCanvas(currentImage.id)
     if (!canvas) return
 
-    canvas.toBlob(blob => {
+    canvas.toBlob((blob) => {
       if (blob) {
-        const filename = `${images[currentIndex].name.replace(/\.[^/.]+$/, '')}_${shape}.png`
+        const filename = `${currentImage.name.replace(/\.[^/.]+$/, '')}_${shape}.png`
         saveAs(blob, filename)
       }
     }, 'image/png')
@@ -17,15 +21,15 @@ const DownloadButtons = ({ images, currentIndex, shape, getCanvas }) => {
   const handleSaveAll = async () => {
     const zip = new JSZip()
 
-    for (let i = 0; i < images.length; i++) {
-      const canvas = await getCanvas(i)
+    for (const image of images) {
+      const canvas = await getCanvas(image.id)
       if (!canvas) continue
 
-      const blob = await new Promise(resolve =>
+      const blob = await new Promise((resolve) =>
         canvas.toBlob(resolve, 'image/png')
       )
 
-      const filename = `${images[i].name.replace(/\.[^/.]+$/, '')}_${shape}.png`
+      const filename = `${image.name.replace(/\.[^/.]+$/, '')}_${shape}.png`
       zip.file(filename, blob)
     }
 
