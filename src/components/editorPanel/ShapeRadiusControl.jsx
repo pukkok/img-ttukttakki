@@ -1,6 +1,6 @@
 const ShapeRadiusControl = ({ radius, onChange }) => {
   return (
-    <div className="flex gap-2 text-sm text-gray-300 mb-4">
+    <div className="flex items-center gap-2 text-sm text-gray-300">
       <label htmlFor="radius">둥근 모서리:</label>
       <input
         id="radius"
