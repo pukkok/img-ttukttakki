@@ -58,11 +58,13 @@ const App = () => {
       <h1 className="text-2xl font-bold text-center mb-6">🖼️ 이미지 도형 자르기</h1>
 
       <ImageUploader onImagesSelected={handleSetImages} />
-
-      <ShapeSelector
-        shape={currentCrop.shape}
-        onChange={(newShape) => updateCurrentCrop({ shape: newShape, shapeOptions: newShape === '둥근 모서리' ? { radius: roundedRadius } : {} })}
-      />
+      {images.length > 0 &&
+        <ShapeSelector
+          shape={currentCrop.shape}
+          onChange={(newShape) => updateCurrentCrop({ shape: newShape, shapeOptions: newShape === '둥근 모서리' ? { radius: roundedRadius } : {} })}
+        />
+      }
+      
       <div className='min-h-6'>
         {currentCrop.shape === '둥근 모서리' && (
           <ShapeRadiusControl
