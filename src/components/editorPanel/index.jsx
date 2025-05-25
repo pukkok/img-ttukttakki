@@ -4,31 +4,34 @@ import ScaleControl from './ScaleControl'
 
 const EditorPanel = ({ crop, onChange, roundedRadius }) => {
   return (
-    <div className="w-fit border border-gray-700 rounded-lg p-4 bg-[#1e1e1e] h-fit">
-      <h2 className="text-white font-semibold text-lg mb-4">✂️ 편집 도구</h2>
-
-      <ShapeSelector
-        shape={crop.shape}
-        onChange={(newShape) =>
-          onChange({
-            shape: newShape,
-            shapeOptions: newShape === '둥근 모서리' ? { radius: roundedRadius } : {}
-          })
-        }
-      />
-
-      {crop.shape === '둥근 모서리' && (
-        <ShapeRadiusControl
-          radius={crop.shapeOptions?.radius || 0}
-          onChange={(radius) => onChange({ shapeOptions: { radius } })}
+    <div className="text-sm text-gray-300 px-2 py-6 space-y-4">
+      <div className='flex gap-4 items-center'>
+        <p className='pr-2 border-r border-gray-500'>모양선택</p>
+        <ShapeSelector
+          shape={crop.shape}
+          onChange={(newShape) =>
+            onChange({
+              shape: newShape,
+              shapeOptions:
+                newShape === '둥근 모서리' ? { radius: roundedRadius } : {}
+            })
+          }
         />
-      )}
+      </div>
 
-      <div className="mt-4">
+      <div className='flex items-center gap-4'>
+        <p className='pr-2 border-r border-gray-500'>컨트롤러</p>
         <ScaleControl
           scale={crop.scale}
           onChange={(scale) => onChange({ scale })}
         />
+
+        {crop.shape === '둥근 모서리' && (
+          <ShapeRadiusControl
+            radius={crop.shapeOptions?.radius || 0}
+            onChange={(radius) => onChange({ shapeOptions: { radius } })}
+          />
+        )}
       </div>
     </div>
   )
