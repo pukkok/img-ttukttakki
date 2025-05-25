@@ -1,7 +1,16 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
 import getShapePath from '../utils/getShapePath'
 
-const CropCanvasEditor = ({ image, shape = '원형', background = 'transparent', offset, scale, onOffsetChange, onScaleChange, shapeOptions = {} }) => {
+const CropCanvasEditor = ({
+  image,
+  shape = '원형',
+  background = 'transparent',
+  offset,
+  scale,
+  onOffsetChange,
+  onScaleChange,
+  shapeOptions = {},
+}) => {
   const canvasRef = useRef(null)
   const size = 400
   const draggingRef = useRef(false)
@@ -55,19 +64,34 @@ const CropCanvasEditor = ({ image, shape = '원형', background = 'transparent',
     draggingRef.current = false
   }
 
-  const handleWheel = (e) => {
-    e.preventDefault()
-    const delta = e.deltaY > 0 ? -0.05 : 0.05
-    const newScale = Math.min(Math.max(scale + delta, 0.1), 5)
-    onScaleChange(newScale)
-  }
-
   const handleScaleInput = (e) => {
     const value = parseFloat(e.target.value)
     if (!isNaN(value)) {
       onScaleChange(Math.min(Math.max(value, 0.1), 5))
     }
   }
+
+  const handleWheel = useCallback(
+    (e) => {
+      e.preventDefault()
+      const delta = e.deltaY > 0 ? -0.05 : 0.05
+      const newScale = Math.min(Math.max(scale + delta, 0.1), 5)
+      onScaleChange(newScale)
+    },
+    [scale, onScaleChange]
+  )
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const handleWheelWrapped = (e) => handleWheel(e)
+    canvas.addEventListener('wheel', handleWheelWrapped, { passive: false })
+
+    return () => {
+      canvas.removeEventListener('wheel', handleWheelWrapped)
+    }
+  }, [handleWheel])
 
   return (
     <div className="mt-6 flex flex-col items-center gap-4">
@@ -82,7 +106,6 @@ const CropCanvasEditor = ({ image, shape = '원형', background = 'transparent',
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          onWheel={handleWheel}
         />
       </div>
 
