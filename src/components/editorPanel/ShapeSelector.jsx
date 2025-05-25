@@ -1,8 +1,8 @@
 const ShapeSelector = ({ shape, onChange }) => {
-  const shapes = ['원형', '정사각형', '하트', '둥근 모서리']
+  const shapes = ['원형', '하트', '사각형(둥근 모서리)']
 
   return (
-    <div className="flex gap-2 my-4 justify-center text-sm">
+    <div className="flex gap-2 justify-center text-sm">
       {shapes.map((s) => (
         <button
           key={s}
