@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import ImageUploader from './components/ImageUploader'
 import CropCanvasEditor from './components/CropCanvasEditor'
 import NavigationButtons from './components/NavigationButtons'
-import DownloadButtons from './components/DownloadButtons'
 import ShapeSelector from './components/ShapeSelector'
 import ShapeRadiusControl from './components/ShapeRadiusControl'
 import getMaskedCanvas from './utils/getMaskedCanvas'
+import Sidebar from './components/sidebar' // ← 디렉토리 구조 반영됨
 
 const App = () => {
   const [images, setImages] = useState([])
@@ -51,53 +50,69 @@ const App = () => {
   }
 
   const currentImage = images[currentIndex] || null
-  const currentCrop = cropStates[currentIndex] || { offset: { x: 0, y: 0 }, scale: 1, shape: '원형' }
+  const currentCrop = cropStates[currentIndex] || {
+    offset: { x: 0, y: 0 },
+    scale: 1,
+    shape: '원형',
+    shapeOptions: {}
+  }
 
   return (
-    <div className="min-h-screen bg-[#111] text-white px-4 py-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-6">🖼️ 이미지 도형 자르기</h1>
+    <div className="min-h-screen bg-[#111] text-white flex flex-col md:flex-row">
+      {/* 왼쪽: 작업 영역 */}
+      <main className="flex-1 px-4 py-8 max-w-3xl mx-auto">
+        <h1 className="text-2xl font-bold text-center mb-6">🖼️ 이미지 도형 자르기</h1>
 
-      <ImageUploader onImagesSelected={handleSetImages} />
-      {images.length > 0 &&
-        <ShapeSelector
-          shape={currentCrop.shape}
-          onChange={(newShape) => updateCurrentCrop({ shape: newShape, shapeOptions: newShape === '둥근 모서리' ? { radius: roundedRadius } : {} })}
-        />
-      }
-      
-      <div className='min-h-6'>
-        {currentCrop.shape === '둥근 모서리' && (
-          <ShapeRadiusControl
-            radius={currentCrop.shapeOptions?.radius || 20}
-            onChange={(radius) => updateCurrentCrop({ shapeOptions: { radius } })}
+        {images.length > 0 && (
+          <ShapeSelector
+            shape={currentCrop.shape}
+            onChange={(newShape) =>
+              updateCurrentCrop({
+                shape: newShape,
+                shapeOptions: newShape === '둥근 모서리' ? { radius: roundedRadius } : {},
+              })
+            }
           />
         )}
-      </div>
 
-      <CropCanvasEditor
-        image={currentImage}
-        shape={currentCrop.shape}
-        background={background}
-        offset={currentCrop.offset}
-        scale={currentCrop.scale}
-        onOffsetChange={(offset) => updateCurrentCrop({ offset })}
-        onScaleChange={(scale) => updateCurrentCrop({ scale })}
-        shapeOptions={currentCrop.shapeOptions || {}}
-      />
+        <div className="min-h-6">
+          {currentCrop.shape === '둥근 모서리' && (
+            <ShapeRadiusControl
+              radius={currentCrop.shapeOptions?.radius || 0}
+              onChange={(radius) => updateCurrentCrop({ shapeOptions: { radius } })}
+            />
+          )}
+        </div>
 
-      <NavigationButtons
-        currentIndex={currentIndex}
-        total={images.length}
-        onPrev={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
-        onNext={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
-      />
+        <CropCanvasEditor
+          image={currentImage}
+          shape={currentCrop.shape}
+          background={background}
+          offset={currentCrop.offset}
+          scale={currentCrop.scale}
+          onOffsetChange={(offset) => updateCurrentCrop({ offset })}
+          onScaleChange={(scale) => updateCurrentCrop({ scale })}
+          shapeOptions={currentCrop.shapeOptions || {}}
+        />
 
-      <DownloadButtons
+        <NavigationButtons
+          currentIndex={currentIndex}
+          total={images.length}
+          onPrev={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+          onNext={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
+        />
+      </main>
+
+      {/* 오른쪽: 사이드바 */}
+      <Sidebar 
+        onImagesSelected={handleSetImages} 
+        
         images={images}
         currentIndex={currentIndex}
         shape={currentCrop.shape}
         background={background}
         getCanvas={getCanvas}
+        onSelectIndex={setCurrentIndex}
       />
     </div>
   )
