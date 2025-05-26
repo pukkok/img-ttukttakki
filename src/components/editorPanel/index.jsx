@@ -1,6 +1,7 @@
 import ShapeSelector from './ShapeSelector'
 import ShapeRadiusControl from './ShapeRadiusControl'
 import ScaleControl from './ScaleControl'
+import ShapeRatioControl from './ShapeRatioControl'
 
 const EditorPanel = ({ crop, onChange, roundedRadius }) => {
   return (
@@ -27,10 +28,16 @@ const EditorPanel = ({ crop, onChange, roundedRadius }) => {
         />
 
         {crop.shape === '사각형(둥근 모서리)' && (
-          <ShapeRadiusControl
-            radius={crop.shapeOptions?.radius || 0}
-            onChange={(radius) => onChange({ shapeOptions: { radius } })}
-          />
+          <>
+            <ShapeRadiusControl
+              radius={crop.shapeOptions?.radius || 0}
+              onChange={(radius) => onChange({ shapeOptions: { ...crop.shapeOptions, radius } })}
+            />
+            <ShapeRatioControl
+              aspectRatio={crop.shapeOptions?.aspectRatio || '1:1'}
+              onChange={(ratio) => onChange({ shapeOptions: { ...crop.shapeOptions, aspectRatio: ratio } })}
+            />
+          </>
         )}
       </div>
     </div>
