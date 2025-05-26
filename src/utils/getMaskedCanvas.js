@@ -3,7 +3,6 @@ import getShapePath from './getShapePath'
 const getMaskedCanvas = async ({
   image,
   shape = '원형',
-  background = 'transparent',
   offset = { x: 0, y: 0 },
   scale = 1,
   shapeOptions = {},
@@ -26,12 +25,9 @@ const getMaskedCanvas = async ({
       const cropX = -offset.x / scale
       const cropY = -offset.y / scale
 
-      // 잘라낼 영역이 이미지 범위를 벗어나지 않게 clamp
-      const safeCropX = Math.max(0, cropX)
-      const safeCropY = Math.max(0, cropY)
-      const safeCropW = Math.min(imgW - safeCropX, visibleW)
-      const safeCropH = Math.min(imgH - safeCropY, visibleH)
-      const outputSize = Math.min(safeCropW, safeCropH)
+      const cropW = Math.min(imgW - cropX, visibleW)
+      const cropH = Math.min(imgH - cropY, visibleH)
+      const outputSize = Math.min(cropW, cropH)
 
       const canvas = document.createElement('canvas')
       canvas.width = outputSize
@@ -45,8 +41,8 @@ const getMaskedCanvas = async ({
       // drawImage(원본에서 자를 부분, 캔버스에 그릴 부분)
       ctx.drawImage(
         img,
-        safeCropX,
-        safeCropY,
+        cropX,
+        cropY,
         outputSize,
         outputSize,
         0,
