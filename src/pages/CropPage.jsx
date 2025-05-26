@@ -129,9 +129,13 @@ const CropPage = () => {
         </footer>
       </div>
 
-      {/* 오른쪽 고정 사이드바 */}
       <Sidebar
         onImagesSelected={handleSetImages}
+        onClearAllImages={() => {
+          setImages([])
+          setCurrentImageId(null)
+          setCropStates({})
+        }}
         images={images}
         currentImageId={currentImageId}
         shape={currentCrop.shape}

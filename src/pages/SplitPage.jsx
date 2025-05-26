@@ -50,6 +50,10 @@ const SplitPage = () => {
           setCurrentImageId(newImages[0]?.id || null)
         }}
         images={images}
+        onClearAllImages={() => {
+          setImages([])
+          setCurrentImageId(null)
+        }}
         currentImageId={currentImageId}
         shape={`${rows}x${cols}`}
         getSplitCanvases={() =>

@@ -6,6 +6,7 @@ import DownloadButtonsSplit from './DownloadButtonsSplit'
 
 const Sidebar = ({
   onImagesSelected,
+  onClearAllImages,
   images,
   currentImageId,
   shape,
@@ -28,7 +29,11 @@ const Sidebar = ({
       </button>
       <h2 className="text-lg font-semibold text-white mb-2">🗂 파일 관리</h2>
 
-      <ImageUploader onImagesSelected={onImagesSelected} />
+      <ImageUploader
+        onImagesSelected={onImagesSelected}
+        onClearImages={onClearAllImages}
+        existingImages={images}
+      />
 
       <div className="flex-1 mt-6 overflow-y-auto">
         <ImageList
