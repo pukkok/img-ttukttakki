@@ -17,9 +17,11 @@ const parseAspectRatio = (ratioStr) => {
  */
 function getShapePath(shape, size = 500, options = {}) {
   const path = new Path2D()
+  const x = size / 2
+  const y = size / 2
+  const r = size / 2
 
   if (shape === '원형') {
-    const r = size / 2
     path.arc(r, r, r, 0, Math.PI * 2)
     return path
   }
@@ -52,21 +54,18 @@ function getShapePath(shape, size = 500, options = {}) {
   }
 
   if (shape === '하트') {
-    const cx = size / 2
-    const cy = size / 2
-    const r = size / 4
-    const x = cx
-    const y = cy + r * 0.3
+    const hr = r * 1.4
+    const offsetY = hr * 0.35
+    const cy = y + offsetY
 
-    path.moveTo(x, y)
-    path.bezierCurveTo(x + r, cy - r * 0.05, x + r * 0.75, cy - r * 1.35, x, cy - r * 0.75)
-    path.bezierCurveTo(x - r * 0.75, cy - r * 1.35, x - r, cy - r * 0.05, x, y)
+    path.moveTo(x, cy + hr * 0.3)
+    path.bezierCurveTo(x + hr, cy - hr * 0.05, x + hr * 0.75, cy - hr * 1.35, x, cy - hr * 0.75)
+    path.bezierCurveTo(x - hr * 0.75, cy - hr * 1.35, x - hr, cy - hr * 0.05, x, cy + hr * 0.3)
     path.closePath()
     return path
   }
 
   // fallback: 원형
-  const r = size / 2
   path.arc(r, r, r, 0, Math.PI * 2)
   return path
 }
