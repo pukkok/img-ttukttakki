@@ -1,6 +1,8 @@
+import { useLocation } from 'react-router-dom'
 import ImageUploader from './ImageUploader'
-import DownloadButtons from './DownloadButtons'
 import ImageList from './ImageList'
+import DownloadButtonsCrop from './DownloadButtonsCrop'
+import DownloadButtonsSplit from './DownloadButtonsSplit'
 
 const Sidebar = ({
   onImagesSelected,
@@ -8,9 +10,13 @@ const Sidebar = ({
   currentImageId,
   shape,
   getCanvas,
+  getSplitCanvases,
   onSelectImageId,
   onDeleteImageId
 }) => {
+  const location = useLocation()
+  const isSplitPage = location.pathname === '/split'
+
   return (
     <aside className="w-full md:w-[280px] shrink-0 border-l border-gray-700 p-4 bg-[#1a1a1a] flex flex-col h-screen">
       <h2 className="text-lg font-semibold text-white mb-4">🗂 파일 관리</h2>
@@ -27,12 +33,19 @@ const Sidebar = ({
       </div>
 
       <div className="mt-6">
-        <DownloadButtons
-          images={images}
-          currentImageId={currentImageId}
-          shape={shape}
-          getCanvas={getCanvas}
-        />
+        {isSplitPage ? (
+          <DownloadButtonsSplit
+            images={images}
+            getSplitCanvases={getSplitCanvases}
+          />
+        ) : (
+          <DownloadButtonsCrop
+            images={images}
+            currentImageId={currentImageId}
+            shape={shape}
+            getCanvas={getCanvas}
+          />
+        )}
       </div>
     </aside>
   )
