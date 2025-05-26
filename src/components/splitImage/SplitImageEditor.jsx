@@ -77,6 +77,9 @@ const SplitImageEditor = ({
         ref={canvasRef}
         className="border border-gray-700 rounded shadow"
       />
+      <p className="mt-2 text-xs text-gray-400 text-center">
+        미리보기는 비율 기반이며, 저장 이미지는 원본 해상도 기준으로 출력됩니다.
+      </p>
     </div>
   )
 }
