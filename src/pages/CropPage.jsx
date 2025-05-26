@@ -104,7 +104,7 @@ const CropPage = () => {
               shapeOptions={currentCrop.shapeOptions || {}}
             />
           ) : (
-            <p className="text-gray-500">이미지를 업로드해주세요.</p>
+            <p className="text-gray-500">도형 자르기 기능은 한번에 여러장 업로드가 가능합니다.</p>
           )}
         </main>
 

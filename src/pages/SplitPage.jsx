@@ -39,7 +39,7 @@ const SplitPage = () => {
               orientation={orientation}
             />
           ) : (
-            <p className="text-gray-500">이미지를 업로드해주세요.</p>
+            <p className="text-gray-500">분할 기능은 이미지 한장만 업로드 가능합니다.</p>
           )}
         </main>
       </div>
