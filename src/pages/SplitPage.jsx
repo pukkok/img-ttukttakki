@@ -67,6 +67,7 @@ const SplitPage = () => {
             setCurrentImageId(updated[0]?.id || null)
           }
         }}
+        allowMultiple={false}
       />
     </div>
   )

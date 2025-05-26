@@ -13,7 +13,8 @@ const Sidebar = ({
   getCanvas,
   getSplitCanvases,
   onSelectImageId,
-  onDeleteImageId
+  onDeleteImageId,
+  allowMultiple = true,
 }) => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -33,6 +34,7 @@ const Sidebar = ({
         onImagesSelected={onImagesSelected}
         onClearImages={onClearAllImages}
         existingImages={images}
+        allowMultiple={allowMultiple}
       />
 
       <div className="flex-1 mt-6 overflow-y-auto">
