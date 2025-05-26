@@ -27,7 +27,7 @@ const ImageUploader = ({ onImagesSelected }) => {
   }
 
   return (
-    <div className="p-4 border border-dashed border-gray-400 rounded-lg text-center">
+    <div className="p-3 border border-dashed border-gray-400 rounded-lg text-center">
       <input
         type="file"
         ref={fileInputRef}
