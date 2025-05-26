@@ -23,11 +23,13 @@ const SplitPage = () => {
 
   return (
     <div className="flex h-screen bg-[#111] text-white overflow-hidden">
-      {/* 왼쪽: 작업 영역 */}
-      <div className="flex flex-col flex-1 p-6 gap-6">
-        <SplitSettingsPanel onApply={handleApply} />
 
-        <div className="flex-1 flex items-center justify-center">
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <header className="w-full border-b border-gray-800">
+          <SplitSettingsPanel onApply={handleApply} />
+        </header>
+
+        <main className="flex-1 flex items-center justify-center overflow-auto px-4 py-8">
           {currentImage ? (
             <SplitImageEditor
               image={currentImage}
@@ -39,10 +41,9 @@ const SplitPage = () => {
           ) : (
             <p className="text-gray-500">이미지를 업로드해주세요.</p>
           )}
-        </div>
+        </main>
       </div>
 
-      {/* 오른쪽: 사이드바 재활용 */}
       <Sidebar
         onImagesSelected={(newImages) => {
           setImages(newImages)
@@ -50,7 +51,7 @@ const SplitPage = () => {
         }}
         images={images}
         currentImageId={currentImageId}
-        shape={`${rows}x${cols}`} // shape은 여기선 의미 없음, 이름용만
+        shape={`${rows}x${cols}`}
         getSplitCanvases={() =>
           splitImageToCanvases(currentImage.url, rows, cols, paperSize, orientation)
         }
