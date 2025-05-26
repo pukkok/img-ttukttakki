@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { generateId } from '../../utils/generateId'
 
-const ImageUploader = ({ onImagesSelected, onClearImages, existingImages = [] }) => {
+const ImageUploader = ({ onImagesSelected, onClearImages, existingImages = [], allowMultiple=true }) => {
   const fileInputRef = useRef(null)
 
   const handleFileChange = (e) => {
@@ -22,9 +22,12 @@ const ImageUploader = ({ onImagesSelected, onClearImages, existingImages = [] })
     })
 
     Promise.all(readers).then((newImages) => {
-      const merged = [...existingImages, ...newImages]
+      const merged = allowMultiple
+        ? [...existingImages, ...newImages]
+        : [newImages[0]] // 하나만 유지
+
       onImagesSelected(merged)
-      e.target.value = null // 같은 파일 다시 선택 가능하도록
+      e.target.value = null
     })
   }
 
@@ -41,21 +44,21 @@ const ImageUploader = ({ onImagesSelected, onClearImages, existingImages = [] })
         type="file"
         ref={fileInputRef}
         accept="image/*"
-        multiple
+        multiple={allowMultiple}
         onChange={handleFileChange}
         className="hidden"
       />
 
       <div className="flex justify-center gap-4">
         <button
-          className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800"
+          className="bg-blue-700 text-white px-3 py-2 rounded hover:bg-blue-800 text-sm"
           onClick={() => fileInputRef.current.click()}
         >
           이미지 추가
         </button>
 
         <button
-          className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800"
+          className="bg-red-700 text-white px-3 py-2 rounded hover:bg-red-800 text-sm"
           onClick={handleClear}
         >
           초기화
