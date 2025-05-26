@@ -1,9 +1,9 @@
 {
-  "name": "easy-crop",
+  "name": "img-ttukttakki",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://pukkok.github.io/easy-crop",
+  "homepage": "https://pukkok.github.io/img-ttukttakki",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

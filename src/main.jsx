@@ -6,7 +6,7 @@ import SplitPage from './pages/SplitPage'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter basename='easy-crop'>
+  <BrowserRouter basename='img-ttukttakki'>
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/crop" element={<CropPage />} />
