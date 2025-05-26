@@ -58,7 +58,7 @@ const DownloadButtonsCrop = ({ images, currentImageId, shape, getCanvas }) => {
       <button
         onClick={handleSaveCurrent}
         className={`px-4 py-2 rounded text-white text-sm ${
-          isSavingCurrent ? 'bg-gray-600' : 'bg-green-600 hover:bg-green-700'
+          isSavingCurrent ? 'bg-gray-600' : 'bg-[#10B981] hover:bg-[#0ea672]'
         }`}
         disabled={isSavingCurrent || !images.length}
       >

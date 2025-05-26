@@ -66,7 +66,7 @@ const DownloadButtonsSplit = ({ images, getSplitCanvases, paperSize, orientation
       <button
         onClick={handleSaveAllZip}
         className={`px-4 py-2 rounded text-white text-sm ${
-          isSavingZip ? 'bg-gray-600' : 'bg-purple-600 hover:bg-purple-700'
+          isSavingZip ? 'bg-gray-600' : 'bg-[#10B981] hover:bg-[#0ea672]'
         }`}
         disabled={isSavingZip || !images.length}
       >
@@ -76,7 +76,7 @@ const DownloadButtonsSplit = ({ images, getSplitCanvases, paperSize, orientation
       <button
         onClick={handleSavePDF}
         className={`px-4 py-2 rounded text-white text-sm ${
-          isSavingPdf ? 'bg-gray-600' : 'bg-green-600 hover:bg-green-700'
+          isSavingPdf ? 'bg-gray-600' : 'bg-purple-600 hover:bg-purple-700'
         }`}
         disabled={isSavingPdf || !images.length}
       >
