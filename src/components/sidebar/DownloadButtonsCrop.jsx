@@ -17,7 +17,8 @@ const DownloadButtonsCrop = ({ images, currentImageId, shape, getCanvas }) => {
 
       canvas.toBlob((blob) => {
         if (blob) {
-          const filename = `image_${shape || 'crop'}.png`
+          const image = images.find(i => i.id === currentImageId)
+          const filename = `${image.name.replace(/\.[^/.]+$/, '')}_${shape || 'crop'}.png`
           saveAs(blob, filename)
         }
       }, 'image/png')
