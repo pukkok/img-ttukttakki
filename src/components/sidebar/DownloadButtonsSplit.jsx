@@ -32,7 +32,7 @@ const DownloadButtonsSplit = ({ images, getSplitCanvases }) => {
     <div className="mt-8 flex justify-center">
       <button
         onClick={handleSaveAll}
-        className={`px-4 py-2 rounded text-white ${
+        className={`px-4 py-2 rounded text-white text-sm ${
           isSaving ? 'bg-gray-600' : 'bg-purple-600 hover:bg-purple-700'
         }`}
         disabled={isSaving || !images.length}

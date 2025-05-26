@@ -57,7 +57,7 @@ const DownloadButtonsCrop = ({ images, currentImageId, shape, getCanvas }) => {
     <div className="mt-8 flex justify-center gap-4 items-center">
       <button
         onClick={handleSaveCurrent}
-        className={`px-4 py-2 rounded text-white ${
+        className={`px-4 py-2 rounded text-white text-sm ${
           isSavingCurrent ? 'bg-gray-600' : 'bg-green-600 hover:bg-green-700'
         }`}
         disabled={isSavingCurrent || !images.length}
@@ -67,7 +67,7 @@ const DownloadButtonsCrop = ({ images, currentImageId, shape, getCanvas }) => {
 
       <button
         onClick={handleSaveAll}
-        className={`px-4 py-2 rounded text-white ${
+        className={`px-4 py-2 rounded text-white text-sm ${
           isSavingAll ? 'bg-gray-600' : 'bg-purple-600 hover:bg-purple-700'
         }`}
         disabled={isSavingAll || !images.length}
