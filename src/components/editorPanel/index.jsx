@@ -5,8 +5,8 @@ import ShapeRatioControl from './ShapeRatioControl'
 
 const EditorPanel = ({ crop, onChange, roundedRadius }) => {
   return (
-    <div className="text-sm text-gray-300 px-2 py-6 space-y-4">
-      <div className='flex gap-4 items-center'>
+    <div className="text-sm text-gray-300 px-2 py-6 space-y-2">
+      <div className='flex gap-4 items-center min-h-7.5'>
         <p className='pr-2 border-r border-gray-500'>모양선택</p>
         <ShapeSelector
           shape={crop.shape}
@@ -20,7 +20,7 @@ const EditorPanel = ({ crop, onChange, roundedRadius }) => {
         />
       </div>
 
-      <div className='flex items-center gap-4'>
+      <div className='flex items-center gap-4 min-h-7.5'>
         <p className='pr-2 border-r border-gray-500'>컨트롤러</p>
         <ScaleControl
           scale={crop.scale}
