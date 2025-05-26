@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import { PAPER_SIZES } from '../../utils/paperSizes'
 
 const SplitSettingsPanel = ({ onApply }) => {
   const [rows, setRows] = useState(3)
   const [cols, setCols] = useState(3)
   const [paperSize, setPaperSize] = useState('A4')
+  const [orientation, setOrientation] = useState('portrait')
 
   const handleApply = () => {
-    onApply({ rows, cols, paperSize })
+    onApply({ rows, cols, paperSize, orientation })
   }
 
   return (
@@ -42,11 +44,23 @@ const SplitSettingsPanel = ({ onApply }) => {
           onChange={(e) => setPaperSize(e.target.value)}
           className="bg-gray-800 border border-gray-600 px-2 py-1 rounded"
         >
-          <option value="A3">A3</option>
-          <option value="A4">A4</option>
-          <option value="A5">A5</option>
-          <option value="B3">B3</option>
-          <option value="B4">B4</option>
+          {Object.entries(PAPER_SIZES).map(([key, value]) => (
+            <option key={key} value={key}>
+              {`${key} (${value.mm}mm)`}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex gap-4 items-center">
+        <label className="w-20">용지 방향</label>
+        <select
+          value={orientation}
+          onChange={(e) => setOrientation(e.target.value)}
+          className="bg-gray-800 border border-gray-600 px-2 py-1 rounded"
+        >
+          <option value="portrait">세로 (기본)</option>
+          <option value="landscape">가로</option>
         </select>
       </div>
 
