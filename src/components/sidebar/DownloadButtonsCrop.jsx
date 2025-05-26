@@ -62,7 +62,7 @@ const DownloadButtonsCrop = ({ images, currentImageId, shape, getCanvas }) => {
         }`}
         disabled={isSavingCurrent || !images.length}
       >
-        {isSavingCurrent ? '✂️ 자르는 중...' : '현재 저장'}
+        💾 현재 저장
       </button>
 
       <button
