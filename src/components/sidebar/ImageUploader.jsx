@@ -51,14 +51,14 @@ const ImageUploader = ({ onImagesSelected, onClearImages, existingImages = [], a
 
       <div className="flex justify-center gap-4">
         <button
-          className="bg-blue-700 text-white px-3 py-2 rounded hover:bg-blue-800 text-sm"
+          className="bg-gray-700 text-white px-3 py-2 rounded hover:bg-gray-600 text-sm"
           onClick={() => fileInputRef.current.click()}
         >
           이미지 추가
         </button>
 
         <button
-          className="bg-red-700 text-white px-3 py-2 rounded hover:bg-red-800 text-sm"
+          className="bg-gray-700 text-red-400 px-3 py-2 rounded hover:bg-gray-600 text-sm"
           onClick={handleClear}
         >
           초기화
