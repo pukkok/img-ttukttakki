@@ -50,6 +50,8 @@ const SplitPage = () => {
           setCurrentImageId(newImages[0]?.id || null)
         }}
         images={images}
+        paperSize={paperSize}
+        orientation={orientation}
         onClearAllImages={() => {
           setImages([])
           setCurrentImageId(null)

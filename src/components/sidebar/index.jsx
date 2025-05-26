@@ -8,6 +8,8 @@ const Sidebar = ({
   onImagesSelected,
   onClearAllImages,
   images,
+  paperSize,
+  orientation,
   currentImageId,
   shape,
   getCanvas,
@@ -21,7 +23,7 @@ const Sidebar = ({
   const isSplitPage = location.pathname === '/split'
 
   return (
-    <aside className="w-full md:w-[280px] shrink-0 border-l border-gray-700 p-4 bg-[#1a1a1a] flex flex-col h-screen">
+    <aside className="w-full md:w-[340px] shrink-0 border-l border-gray-700 p-4 bg-[#1a1a1a] flex flex-col h-screen">
       <button
         className="mb-10 text-sm text-gray-300 hover:text-white px-3 py-1 border border-gray-600 rounded"
         onClick={() => navigate(-1)}
@@ -51,6 +53,8 @@ const Sidebar = ({
           <DownloadButtonsSplit
             images={images}
             getSplitCanvases={getSplitCanvases}
+            paperSize={paperSize}
+            orientation={orientation}
           />
         ) : (
           <DownloadButtonsCrop
