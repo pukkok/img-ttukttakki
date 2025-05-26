@@ -92,16 +92,20 @@ const CropPage = () => {
 
         {/* 미리보기 */}
         <main className="flex-1 flex flex-col items-center justify-center overflow-auto px-4 py-8">
-          <CropCanvasEditor
-            image={currentImage}
-            shape={currentCrop.shape}
-            background={background}
-            offset={currentCrop.offset}
-            scale={currentCrop.scale}
-            onOffsetChange={(offset) => updateCurrentCrop({ offset })}
-            onScaleChange={(scale) => updateCurrentCrop({ scale })}
-            shapeOptions={currentCrop.shapeOptions || {}}
-          />
+          {currentImage ? (
+            <CropCanvasEditor
+              image={currentImage}
+              shape={currentCrop.shape}
+              background={background}
+              offset={currentCrop.offset}
+              scale={currentCrop.scale}
+              onOffsetChange={(offset) => updateCurrentCrop({ offset })}
+              onScaleChange={(scale) => updateCurrentCrop({ scale })}
+              shapeOptions={currentCrop.shapeOptions || {}}
+            />
+          ) : (
+            <p className="text-gray-500">이미지를 업로드해주세요.</p>
+          )}
         </main>
 
         {/* 푸터: 페이지네이션 */}
