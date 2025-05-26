@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PAPER_SIZES } from '../../utils/paperSizes'
+import { getPaperLabel } from '../../utils/getPaperLabel'
 
 const SplitSettingsPanel = ({ onApply }) => {
   const [rows, setRows] = useState(3)
@@ -44,9 +45,9 @@ const SplitSettingsPanel = ({ onApply }) => {
           onChange={(e) => setPaperSize(e.target.value)}
           className="bg-gray-800 border border-gray-600 px-2 py-1 rounded"
         >
-          {Object.entries(PAPER_SIZES).map(([key, value]) => (
+          {Object.keys(PAPER_SIZES).map((key) => (
             <option key={key} value={key}>
-              {`${key} (${value.mm}mm)`}
+              {getPaperLabel(key, orientation)}
             </option>
           ))}
         </select>
