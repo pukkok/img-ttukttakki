@@ -38,17 +38,6 @@ const getMaskedCanvas = async ({
       canvas.height = outputSize
       const ctx = canvas.getContext('2d')
 
-      // 배경 처리
-      if (background === 'white') {
-        ctx.fillStyle = '#fff'
-        ctx.fillRect(0, 0, outputSize, outputSize)
-      } else if (background === 'black') {
-        ctx.fillStyle = '#000'
-        ctx.fillRect(0, 0, outputSize, outputSize)
-      } else {
-        ctx.clearRect(0, 0, outputSize, outputSize)
-      }
-
       ctx.save()
       const shapePath = getShapePath(shape, outputSize, shapeOptions)
       ctx.clip(shapePath)
