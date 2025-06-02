@@ -11,19 +11,34 @@ const SplitPage = () => {
   const [cols, setCols] = useState(3)
   const [paperSize, setPaperSize] = useState('A4')
   const [orientation, setOrientation] = useState('portrait')
+  const [padding, setPadding] = useState(10)
 
-  const handleApply = ({ rows, cols, paperSize, orientation }) => {
+  // ✅ 새로 추가된 옵션들
+  const [bleed, setBleed] = useState(5) // 고정값이지만 체크 여부로 0 또는 5
+  const [useActualSize, setUseActualSize] = useState(false)
+
+  const handleApply = ({
+    rows,
+    cols,
+    paperSize,
+    orientation,
+    padding,
+    bleed,
+    useActualSize
+  }) => {
     setRows(rows)
     setCols(cols)
     setPaperSize(paperSize)
     setOrientation(orientation)
+    setPadding(padding)
+    setBleed(bleed)
+    setUseActualSize(useActualSize)
   }
 
   const currentImage = images.find(img => img.id === currentImageId)
 
   return (
     <div className="flex h-screen bg-[#111] text-white overflow-hidden">
-
       <div className="flex flex-col flex-1 overflow-hidden">
         <header className="w-full border-b border-gray-800">
           <SplitSettingsPanel onApply={handleApply} />
@@ -59,7 +74,18 @@ const SplitPage = () => {
         currentImageId={currentImageId}
         shape={`${rows}x${cols}`}
         getSplitCanvases={() =>
-          splitImageToCanvases(currentImage.url, rows, cols, paperSize, orientation)
+          currentImage
+            ? splitImageToCanvases(
+                currentImage.url,
+                rows,
+                cols,
+                paperSize,
+                orientation,
+                padding,
+                bleed,
+                useActualSize
+              )
+            : Promise.resolve([])
         }
         onSelectImageId={setCurrentImageId}
         onDeleteImageId={(idToDelete) => {
