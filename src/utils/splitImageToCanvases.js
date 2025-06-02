@@ -2,69 +2,89 @@ import { PAPER_SIZES } from './paperSizes'
 
 /**
  * 이미지를 종이 비율 기준으로 늘린 후, 지정된 행과 열로 분할하여 축소된 canvas 조각들로 반환합니다.
- * 각 조각은 종이 비율을 따르며, 출력용으로 적당한 해상도를 자동 적용합니다.
+ * 각 조각은 종이 비율을 따르며, padding(mm)은 출력용 여백, bleed(mm)는 재단 여유입니다.
  */
 export const splitImageToCanvases = async (
   imageUrl,
   rows,
   cols,
   paperSize = 'A4',
-  orientation = 'portrait'
+  orientation = 'portrait',
+  padding = 10,      // mm 단위 출력 여백 (흰 공간)
+  bleed = 0          // mm 단위 재단 여유 (겹치는 영역)
 ) => {
-  // 종이 규격 정보 가져오기
+  // 종이 규격 정보 (단위: mm)
   const paper = PAPER_SIZES[paperSize] || PAPER_SIZES['A4']
+  
   const unitW = orientation === 'landscape' ? paper.height : paper.width
   const unitH = orientation === 'landscape' ? paper.width : paper.height
-  const paperRatio = unitW / unitH
-
-  // 전체 출력 비율 (cols : rows * 종이 비율)
-  const outputRatio = cols / (rows * paperRatio)
-
+  
+  const paperRatio = unitH / unitW
+  
   // 이미지 로드
   const img = await loadImage(imageUrl)
   const originalWidth = img.width
   const originalHeight = img.height
 
-  // 전체 이미지 사이즈를 출력 비율에 맞춰 가상으로 스케일 조정
+  // 전체 출력 비율 (cols : rows * 종이 비율)
+  const outputRatio = cols / (rows * paperRatio)
   const scaledWidth = originalWidth
   const scaledHeight = scaledWidth / outputRatio
 
-  // 원본 이미지 한 조각의 실제 높이 (화질 보존 조건용)
-  const rawTileHeight = originalHeight / rows
+  // crop 영역 크기 (스케일 기준)
+  const cropW = scaledWidth / cols
+  const cropH = scaledHeight / rows
 
-  // 기본 출력 크기 = 종이 높이의 1/4, 단 원본 해상도보다 크면 축소하지 않음
-  const baseHeight = unitH / 4
-  const tileRatio = paperRatio
-  const targetTileHeight = Math.min(baseHeight, rawTileHeight)
-  const targetTileWidth = targetTileHeight * tileRatio
+  // 이미지 비율 대비 환산 (mm → px) - 단일 비율로 고정
+  const pxPerMm = originalWidth / scaledWidth
 
   const canvases = []
 
-  // 행과 열을 기준으로 이미지 분할
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      // 비율 보정을 위해 가상 스케일링 기준으로 crop 영역 계산
-      const cropX = (col * scaledWidth) / cols
-      const cropY = (row * scaledHeight) / rows
-      const cropW = scaledWidth / cols
-      const cropH = scaledHeight / rows
+      // 각 방향의 padding 계산
+      const padTop = Math.max(row === 0 ? padding : padding - bleed, 0)
+      const padBottom = Math.max(row === rows - 1 ? padding : padding - bleed, 0)
+      const padLeft = Math.max(col === 0 ? padding : padding - bleed, 0)
+      const padRight = Math.max(col === cols - 1 ? padding : padding - bleed, 0)
 
-      // 원본 이미지 좌표계로 다시 매핑
-      const sx = cropX * (originalWidth / scaledWidth)
-      const sy = cropY * (originalHeight / scaledHeight)
-      const sw = cropW * (originalWidth / scaledWidth)
-      const sh = cropH * (originalHeight / scaledHeight)
+      // bleed 계산 (이미지 확장 영역)
+      const bleedTop = row === 0 ? 0 : bleed
+      const bleedBottom = row === rows - 1 ? 0 : bleed
+      const bleedLeft = col === 0 ? 0 : bleed
+      const bleedRight = col === cols - 1 ? 0 : bleed
 
-      // 출력용 canvas 생성 및 그림 그리기
+      // crop 좌표 (이미지 기준)
+      const sx = (col * cropW - bleedLeft) * (originalWidth / scaledWidth)
+      const sy = (row * cropH - bleedTop) * (originalHeight / scaledHeight)
+      const sw = (cropW + bleedLeft + bleedRight) * (originalWidth / scaledWidth)
+      const sh = (cropH + bleedTop + bleedBottom) * (originalHeight / scaledHeight)
+
+      // 캔버스 크기 계산 (px 기준)
+      const canvasWmm = cropW + padLeft + padRight
+      const canvasHmm = cropH + padTop + padBottom
+      const canvasWidth = canvasWmm * pxPerMm
+      const canvasHeight = canvasHmm * pxPerMm
+      const drawWidth = cropW * pxPerMm
+      const drawHeight = cropH * pxPerMm
+      const dx = padLeft * pxPerMm
+      const dy = padTop * pxPerMm
+
+      // canvas 생성
       const canvas = document.createElement('canvas')
-      canvas.width = targetTileWidth
-      canvas.height = targetTileHeight
+      canvas.width = Math.round(canvasWidth)
+      canvas.height = Math.round(canvasHeight)
       const ctx = canvas.getContext('2d')
 
+      // 배경 흰색 채우기
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // 이미지 그리기
       ctx.drawImage(
         img,
-        sx, sy, sw, sh,               // 원본에서 잘라낼 영역
-        0, 0, targetTileWidth, targetTileHeight // 축소된 출력 영역
+        sx, sy, sw, sh,
+        dx, dy, drawWidth, drawHeight
       )
 
       canvases.push(canvas)
@@ -74,9 +94,7 @@ export const splitImageToCanvases = async (
   return canvases
 }
 
-/**
- * 이미지 객체를 비동기로 불러오기
- */
+// 이미지 비동기 로드
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image()

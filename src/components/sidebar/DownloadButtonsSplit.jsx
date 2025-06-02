@@ -21,7 +21,7 @@ const DownloadButtonsSplit = ({ images, getSplitCanvases, paperSize, orientation
         const blob = await new Promise((resolve) =>
           canvases[i].toBlob(resolve, 'image/png')
         )
-        zip.file(`tile_${i + 1}.png`, blob)
+        zip.file(`image_${i + 1}.png`, blob)
       }
 
       const zipBlob = await zip.generateAsync({ type: 'blob' })
