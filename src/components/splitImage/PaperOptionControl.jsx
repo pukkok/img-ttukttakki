@@ -13,12 +13,11 @@ const PaperOptionControl = ({
   const unitWidth = orientation === 'portrait' ? paper.width : paper.height
   const unitHeight = orientation === 'portrait' ? paper.height : paper.width
 
-  // mm → cm 단위로 변환
   const totalW_cm = (unitWidth * cols / 10).toFixed(1)
   const totalH_cm = (unitHeight * rows / 10).toFixed(1)
 
   return (
-    <div className='flex gap-4 items-center'>
+    <div className='flex gap-4 items-center flex-wrap'>
       <p className='pr-2 border-r border-gray-500'>용지</p>
 
       <div className="flex gap-2 items-center">
@@ -48,7 +47,7 @@ const PaperOptionControl = ({
         </select>
       </div>
 
-      <p className="text-xs text-gray-400 mt-3 ml-auto mr-4 whitespace-nowrap">
+      <p className="text-xs text-gray-400 ml-auto mr-4 whitespace-nowrap">
         전체 출력 크기: {totalW_cm}cm × {totalH_cm}cm
       </p>
     </div>
