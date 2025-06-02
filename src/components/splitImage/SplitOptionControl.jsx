@@ -8,9 +8,13 @@ const SplitOptionControl = ({ padding, onPaddingChange, useBleed, onToggleBleed 
         <input
           type="number"
           value={padding}
-          onChange={(e) => onPaddingChange(Number(e.target.value))}
+          onChange={(e) => onPaddingChange(e.target.value)}
+          onBlur={() => {
+            if(!padding) onPaddingChange(0)
+          }}
           min={0}
           max={50}
+          size={5}
           className={`bg-gray-800 border border-gray-600 px-2 py-1 rounded w-20
           appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
         />
