@@ -55,6 +55,39 @@ const App = () => {
     }
   }
 
+  const drawMerge = (ctx) => {
+    ctx.clearRect(0, 0, 120, 120)
+
+    // 배경 사각형
+    ctx.fillStyle = '#bbb'
+    ctx.fillRect(10, 10, 100, 100)
+
+    // 이미지1 (반투명 흰 배경 + 회색 테두리)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+    ctx.fillRect(30, 30, 40, 40)
+    ctx.strokeStyle = '#888'
+    ctx.lineWidth = 1.5
+    ctx.strokeRect(30, 30, 40, 40)
+
+    // 이미지2 (살짝 겹쳐서 아래쪽)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+    ctx.fillRect(50, 50, 40, 40)
+    ctx.strokeStyle = '#888'
+    ctx.lineWidth = 1.5
+    ctx.strokeRect(50, 50, 40, 40)
+
+    // 회전된 이미지3 (45도)
+    ctx.save()
+    ctx.translate(45, 80)
+    ctx.rotate((15 * Math.PI) / 180)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+    ctx.fillRect(-15, -15, 30, 30)
+    ctx.strokeStyle = '#888'
+    ctx.lineWidth = 1.5
+    ctx.strokeRect(-15, -15, 30, 30)
+    ctx.restore()
+  }
+
   return (
     <div className="h-screen bg-[#111] text-white flex flex-col items-center justify-center gap-10 px-4">
       {/* 타이틀 */}
@@ -80,6 +113,12 @@ const App = () => {
           label="이미지 분할"
           draw={drawSplit}
           onClick={() => navigate('/split')}
+        />
+        <CardButton
+          title="이미지 병합"
+          label="이미지 병합"
+          draw={drawMerge}
+          onClick={() => navigate('/merge')}
         />
       </div>
 
