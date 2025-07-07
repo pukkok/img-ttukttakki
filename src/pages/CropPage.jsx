@@ -8,8 +8,6 @@ import getMaskedCanvas from '../utils/getMaskedCanvas'
 const CropPage = () => {
   const [images, setImages] = useState([])
   const [currentImageId, setCurrentImageId] = useState(null)
-  const [background, setBackground] = useState('transparent')
-  const [roundedRadius, setRoundedRadius] = useState(20)
   const [cropStates, setCropStates] = useState({})
 
   const handleSetImages = (newImages) => {
@@ -60,7 +58,6 @@ const CropPage = () => {
     return getMaskedCanvas({
       image,
       shape: crop.shape || '원형',
-      background,
       offset: crop.offset,
       scale: crop.scale,
       shapeOptions: crop.shapeOptions || {},
@@ -86,7 +83,6 @@ const CropPage = () => {
           <EditorPanel
             crop={currentCrop}
             onChange={updateCurrentCrop}
-            roundedRadius={roundedRadius}
           />
         </header>
 
@@ -96,7 +92,6 @@ const CropPage = () => {
             <CropCanvasEditor
               image={currentImage}
               shape={currentCrop.shape}
-              background={background}
               offset={currentCrop.offset}
               scale={currentCrop.scale}
               onOffsetChange={(offset) => updateCurrentCrop({ offset })}

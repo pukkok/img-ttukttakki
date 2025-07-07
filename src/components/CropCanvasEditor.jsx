@@ -4,7 +4,6 @@ import getShapePath from '../utils/getShapePath'
 const CropCanvasEditor = ({
   image,
   shape = '원형',
-  background = 'transparent',
   offset,
   scale,
   onOffsetChange,
@@ -45,7 +44,7 @@ const CropCanvasEditor = ({
     }
   }
 
-  useEffect(drawCanvas, [image, offset, scale, shape, background, shapeOptions])
+  useEffect(drawCanvas, [image, offset, scale, shape, shapeOptions])
 
   const handleMouseDown = (e) => {
     draggingRef.current = true
