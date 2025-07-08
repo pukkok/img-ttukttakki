@@ -1,10 +1,21 @@
-const NavigationButtons = ({ currentIndex, total, onPrev, onNext }) => {
+import { useCommonStore } from "../stores/useCommonStore"
+
+const NavigationButtons = ({ }) => {
+  const { getCurrentIndex, getMaxLength } = useCommonStore()
+
+  // const setCurrentImageId = useCommonStore(s => s.setCurrentImageId)
+  const currentIndex = getCurrentIndex()
+  const total = getMaxLength()
+
+  const onNext = useCommonStore(s => s.onNext)
+  const onPrev = useCommonStore(s => s.onPrev)
+
   return (
     <div className="flex items-center justify-center gap-6">
       <button
         className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-40"
         onClick={onPrev}
-        disabled={currentIndex === 0}
+        disabled={currentIndex <= 0 || null}
       >
         ← 이전
       </button>

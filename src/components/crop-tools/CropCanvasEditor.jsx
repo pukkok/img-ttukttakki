@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react'
-import getShapePath from '../utils/getShapePath'
+import getShapePath from '../../utils/getShapePath'
+import { useCommonStore } from '../../stores/useCommonStore'
 
 const CropCanvasEditor = ({
   image,

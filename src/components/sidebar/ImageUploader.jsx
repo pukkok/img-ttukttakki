@@ -1,7 +1,10 @@
 import { useRef } from 'react'
 import { generateId } from '../../utils/generateId'
+import { useCommonStore } from '../../stores/useCommonStore'
 
-const ImageUploader = ({ onImagesSelected, onClearImages, existingImages = [], allowMultiple=true }) => {
+const ImageUploader = ({ onImagesSelected, onClearImages, allowMultiple=true }) => {
+  const images = useCommonStore(s => s.images)
+
   const fileInputRef = useRef(null)
 
   const handleFileChange = (e) => {
@@ -23,7 +26,7 @@ const ImageUploader = ({ onImagesSelected, onClearImages, existingImages = [], a
 
     Promise.all(readers).then((newImages) => {
       const merged = allowMultiple
-        ? [...existingImages, ...newImages]
+        ? [...images, ...newImages]
         : [newImages[0]] // 하나만 유지
 
       onImagesSelected(merged)

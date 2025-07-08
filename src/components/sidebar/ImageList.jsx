@@ -1,4 +1,10 @@
-const ImageList = ({ images, currentImageId, onSelect, onDelete }) => {
+import { useCommonStore } from "../../stores/useCommonStore"
+
+const ImageList = ({ onDelete }) => {
+  const images = useCommonStore(s => s.images)
+  const currentImageId = useCommonStore(s => s.currentImageId)
+  const setCurrentImageId = useCommonStore(s => s.setCurrentImageId)
+
   const handleDelete = (name, id) => {
     const confirmDelete = window.confirm(`${name} 를 삭제하시겠습니까?`)
     if (confirmDelete) {
@@ -23,7 +29,7 @@ const ImageList = ({ images, currentImageId, onSelect, onDelete }) => {
             ✕
           </button>
 
-          <button onClick={() => onSelect(img.id)} className="flex items-center gap-3 flex-1 text-left pr-6 min-w-0">
+          <button onClick={() => setCurrentImageId(img.id)} className="flex items-center gap-3 flex-1 text-left pr-6 min-w-0">
             <img
               src={img.url}
               alt={img.name}

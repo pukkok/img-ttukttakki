@@ -1,16 +1,21 @@
 import { useState } from 'react'
-import CropCanvasEditor from '../components/CropCanvasEditor'
+import CropCanvasEditor from '../components/crop-tools/CropCanvasEditor'
 import NavigationButtons from '../components/NavigationButtons'
-import EditorPanel from '../components/editorPanel'
+import CropEditPanel from '../components/crop-tools/CropEditPanel'
 import Sidebar from '../components/sidebar'
 import getMaskedCanvas from '../utils/getMaskedCanvas'
+import { useCommonStore } from '../stores/useCommonStore'
 
 const CropPage = () => {
-  const [images, setImages] = useState([])
-  const [currentImageId, setCurrentImageId] = useState(null)
+  const images = useCommonStore(s => s.images)
+  const setImages = useCommonStore(s => s.setImages)
+  const currentImageId = useCommonStore(s => s.currentImageId)
+  const setCurrentImageId = useCommonStore(s => s.setCurrentImageId)
+  const getCurrentIndex = useCommonStore(s => s.getCurrentIndex)
+
   const [cropStates, setCropStates] = useState({})
 
-  const handleSetImages = (newImages) => {
+  const handleImageSelect = (newImages) => {
     const cropMap = {}
     newImages.forEach(img => {
       cropMap[img.id] = {
@@ -65,7 +70,7 @@ const CropPage = () => {
     })
   }
 
-  const currentIndex = images.findIndex(img => img.id === currentImageId)
+  const currentIndex = getCurrentIndex()
   const currentImage = images[currentIndex] || null
   const currentCrop = cropStates[currentImageId] || {
     offset: { x: 0, y: 0 },
@@ -80,7 +85,7 @@ const CropPage = () => {
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* 헤더: 도구 패널 */}
         <header className="w-full border-b border-gray-800">
-          <EditorPanel
+          <CropEditPanel
             crop={currentCrop}
             onChange={updateCurrentCrop}
           />
@@ -106,36 +111,20 @@ const CropPage = () => {
         {/* 푸터: 페이지네이션 */}
         <footer className="w-full border-t border-gray-800 py-4">
           <div className="max-w-screen-lg mx-auto px-4">
-            <NavigationButtons
-              currentIndex={currentIndex}
-              total={images.length}
-              onPrev={() => {
-                if (currentIndex > 0) {
-                  setCurrentImageId(images[currentIndex - 1].id)
-                }
-              }}
-              onNext={() => {
-                if (currentIndex < images.length - 1) {
-                  setCurrentImageId(images[currentIndex + 1].id)
-                }
-              }}
-            />
+            <NavigationButtons />
           </div>
         </footer>
       </div>
 
       <Sidebar
-        onImagesSelected={handleSetImages}
+        onImagesSelected={handleImageSelect}
         onClearAllImages={() => {
           setImages([])
           setCurrentImageId(null)
           setCropStates({})
         }}
-        images={images}
-        currentImageId={currentImageId}
         shape={currentCrop.shape}
         getCanvas={getCanvas}
-        onSelectImageId={setCurrentImageId}
         onDeleteImageId={handleDeleteImage}
       />
     </div>

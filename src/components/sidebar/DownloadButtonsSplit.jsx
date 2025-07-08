@@ -3,10 +3,15 @@ import { saveAs } from 'file-saver'
 import { useState } from 'react'
 import jsPDF from 'jspdf'
 import { PAPER_SIZES } from '../../utils/paperSizes'
+import { useCommonStore } from '../../stores/useCommonStore'
 
-const DownloadButtonsSplit = ({ images, getSplitCanvases, paperSize, orientation }) => {
+const DownloadButtonsSplit = ({ getSplitCanvases, paperSize, orientation }) => {
+  const images = useCommonStore(s => s.images)
+  
   const [isSavingZip, setIsSavingZip] = useState(false)
   const [isSavingPdf, setIsSavingPdf] = useState(false)
+
+
 
   const handleSaveAllZip = async () => {
     if (!getSplitCanvases || !images.length) return

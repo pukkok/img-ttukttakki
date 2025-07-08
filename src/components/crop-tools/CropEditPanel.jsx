@@ -3,7 +3,7 @@ import ShapeRadiusControl from './ShapeRadiusControl'
 import ScaleControl from './ScaleControl'
 import ShapeRatioControl from './ShapeRatioControl'
 
-const EditorPanel = ({ crop, onChange }) => {
+const CropEditPanel = ({ crop, onChange }) => {
   return (
     <div className="text-sm text-gray-300 px-2 py-6 space-y-2">
       <div className='flex gap-4 items-center min-h-7.5'>
@@ -44,4 +44,4 @@ const EditorPanel = ({ crop, onChange }) => {
   )
 }
 
-export default EditorPanel
+export default CropEditPanel

@@ -7,10 +7,8 @@ import DownloadButtonsSplit from './DownloadButtonsSplit'
 const Sidebar = ({
   onImagesSelected,
   onClearAllImages,
-  images,
   paperSize,
   orientation,
-  currentImageId,
   shape,
   getCanvas,
   getSplitCanvases,
@@ -20,7 +18,6 @@ const Sidebar = ({
 }) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const isSplitPage = location.pathname === '/split'
 
   return (
     <aside className="w-full md:w-[340px] shrink-0 border-l border-gray-700 p-4 bg-[#1a1a1a] flex flex-col h-screen">
@@ -35,35 +32,28 @@ const Sidebar = ({
       <ImageUploader
         onImagesSelected={onImagesSelected}
         onClearImages={onClearAllImages}
-        existingImages={images}
         allowMultiple={allowMultiple}
       />
 
       <div className="flex-1 mt-6 overflow-y-auto">
         <ImageList
-          images={images}
-          currentImageId={currentImageId}
           onSelect={onSelectImageId}
           onDelete={onDeleteImageId}
         />
       </div>
 
       <div className="mt-6">
-        {isSplitPage ? (
-          <DownloadButtonsSplit
-            images={images}
-            getSplitCanvases={getSplitCanvases}
-            paperSize={paperSize}
-            orientation={orientation}
-          />
-        ) : (
-          <DownloadButtonsCrop
-            images={images}
-            currentImageId={currentImageId}
-            shape={shape}
-            getCanvas={getCanvas}
-          />
-        )}
+        {location.pathname === '/split' && 
+        <DownloadButtonsSplit
+          getSplitCanvases={getSplitCanvases}
+          paperSize={paperSize}
+          orientation={orientation}
+        />}
+        {location.pathname === '/crop' && 
+        <DownloadButtonsCrop
+          shape={shape}
+          getCanvas={getCanvas}
+        />}
       </div>
     </aside>
   )
