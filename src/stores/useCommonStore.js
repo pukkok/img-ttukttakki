@@ -32,4 +32,8 @@ export const useCommonStore = create((set, get) => ({
     }
   },
 
+  resetCommonStates: () => {
+    set({images: [], currentImageId: null})
+  }
+
 }))
