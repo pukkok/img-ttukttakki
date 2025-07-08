@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CropCanvasEditor from '../components/crop-tools/CropCanvasEditor'
 import NavigationButtons from '../components/NavigationButtons'
 import CropEditPanel from '../components/crop-tools/CropEditPanel'
@@ -78,6 +78,10 @@ const CropPage = () => {
     shape: '원형',
     shapeOptions: {}
   }
+
+  useEffect(() => {
+    return () => useCommonStore.getState().resetCommonStates()
+  }, [])
 
   return (
     <div className="flex h-screen bg-[#111] text-white overflow-hidden">
