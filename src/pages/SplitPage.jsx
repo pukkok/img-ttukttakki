@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Sidebar from '../components/sidebar'
-import SplitSettingsPanel from '../components/splitImage/SplitSettingsPanel'
-import SplitImageEditor from '../components/splitImage/SplitImageEditor'
+import SplitSettingsPanel from '../components/split-tools/SplitSettingsPanel'
+import SplitImageEditor from '../components/split-tools/SplitImageEditor'
 import { splitImageToCanvases } from '../utils/splitImageToCanvases'
+import { useCommonStore } from '../stores/useCommonStore'
 
 const SplitPage = () => {
-  const [images, setImages] = useState([])
-  const [currentImageId, setCurrentImageId] = useState(null)
+  const images = useCommonStore(s => s.images)
+  const setImages = useCommonStore(s => s.setImages)
+  const currentImageId = useCommonStore(s => s.currentImageId)
+  const setCurrentImageId = useCommonStore(s => s.setCurrentImageId)
+
   const [rows, setRows] = useState(3)
   const [cols, setCols] = useState(3)
   const [paperSize, setPaperSize] = useState('A4')
@@ -37,6 +41,10 @@ const SplitPage = () => {
 
   const currentImage = images.find(img => img.id === currentImageId)
 
+  useEffect(() => {
+    return () => useCommonStore.getState().resetCommonStates()
+  }, [])
+
   return (
     <div className="flex h-screen bg-[#111] text-white overflow-hidden">
       <div className="flex flex-col flex-1 overflow-hidden">
@@ -64,14 +72,12 @@ const SplitPage = () => {
           setImages(newImages)
           setCurrentImageId(newImages[0]?.id || null)
         }}
-        images={images}
         paperSize={paperSize}
         orientation={orientation}
         onClearAllImages={() => {
           setImages([])
           setCurrentImageId(null)
         }}
-        currentImageId={currentImageId}
         shape={`${rows}x${cols}`}
         getSplitCanvases={() =>
           currentImage
@@ -87,7 +93,6 @@ const SplitPage = () => {
               )
             : Promise.resolve([])
         }
-        onSelectImageId={setCurrentImageId}
         onDeleteImageId={(idToDelete) => {
           const updated = images.filter(img => img.id !== idToDelete)
           setImages(updated)
