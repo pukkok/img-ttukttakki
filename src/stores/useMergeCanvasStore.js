@@ -11,9 +11,16 @@ export const useMergeCanvasStore = create((set, get) => ({
   },
   setBackgroundImageInfo: (info) => set({ backgroundImageInfo: info }),
 
-  isFixBackground: false,
-  // setIsFixBackground: (bool) => set({ isFixBackground: bool }),
-  toggleIsFixBackground: () => set({isFixBackground: !get().isFixBackground }),
+  isBackgroundLocked: false,
+  toggleIsBackgroundLocked: () => set({isBackgroundLocked: !get().isBackgroundLocked }),
+
+  selectCrop: true,
+  toggleSelectCrop: () => set({selectCrop: !get().selectCrop}),
+  
+  cropBoxInfo: {
+    width: 0, hegiht: 0, left: 0, top: 0
+  },
+  setCropBoxInfo: (info) => set({ cropBoxInfo: info }),
 
   resetMergeCanvasStates: () => set({
     backgroundImageUrl: null,
@@ -22,6 +29,6 @@ export const useMergeCanvasStore = create((set, get) => ({
       width: 0, height: 0,
       left: 0, top: 0,
     },
-    isFixBackground: false,
+    isBackgroundLocked: false,
   }),
 }))
