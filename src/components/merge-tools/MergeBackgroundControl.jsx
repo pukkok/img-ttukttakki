@@ -1,9 +1,11 @@
 import { useMergeCanvasStore } from "../../stores/useMergeCanvasStore"
+import EditModeToggle from "../EditModeToggle"
 
-const MergeBackgroundControl = ({ backgroundRef, backgroundImageInfo }) => {
+const MergeBackgroundControl = ({ fabricCanvasRef }) => {
+  const backgroundImageInfo = useMergeCanvasStore(s => s.backgroundImageInfo)
   const setBackgroundImageInfo = useMergeCanvasStore(s => s.setBackgroundImageInfo)
-  const isFixBackground = useMergeCanvasStore(s => s.isFixBackground)
-  const toggleIsFixBackground = useMergeCanvasStore(s => s.toggleIsFixBackground)
+  const isBackgroundLocked = useMergeCanvasStore(s => s.isBackgroundLocked)
+  const toggleIsBackgroundLocked = useMergeCanvasStore(s => s.toggleIsBackgroundLocked)
 
   const inputs = [
     { key: 'width', label: '너비 (px)', step: '1' },
@@ -24,8 +26,8 @@ const MergeBackgroundControl = ({ backgroundRef, backgroundImageInfo }) => {
 
     setBackgroundImageInfo({ ...backgroundImageInfo, [key]: numVal })
 
-    if (!backgroundRef.current) return
-    const bgImg = backgroundRef.current.getObjects().find(obj => obj.customType === 'background')
+    if (!fabricCanvasRef.current) return
+    const bgImg = fabricCanvasRef.current.getObjects().find(obj => obj.customType === 'background')
     if (!bgImg) return
 
     if (key === 'rotation') bgImg.set('angle', numVal)
@@ -42,7 +44,7 @@ const MergeBackgroundControl = ({ backgroundRef, backgroundImageInfo }) => {
       setBackgroundImageInfo({ ...backgroundImageInfo, height: numVal })
     }
 
-    backgroundRef.current.renderAll()
+    fabricCanvasRef.current.renderAll()
   }
 
   return (
@@ -53,22 +55,33 @@ const MergeBackgroundControl = ({ backgroundRef, backgroundImageInfo }) => {
           <label>{label} : </label>
           <input 
             type="number"
-            value={formatNumber(backgroundImageInfo[key]) || ''}
+            value={formatNumber(backgroundImageInfo?.[key]) || 0}
             step={step}
             onChange={e => handleChange(key, e.target.value)}
             className="bg-gray-800 border border-gray-600 px-2 py-1 w-20 rounded appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
       ))}
-      <button 
-        className={`px-3 py-1 rounded border border-gray-600 transition-colors duration-200
-          ${isFixBackground 
+      <EditModeToggle 
+        isEditMode={!isBackgroundLocked}
+        onToggle={toggleIsBackgroundLocked}
+      />
+      {/* <button 
+        className={`px-3 py-1 rounded border border-gray-600 transition-colors duration-200 cursor-pointer
+          ${isBackgroundLocked 
             ? 'bg-gray-700 text-white shadow-inner'  // 눌린 상태
             : 'bg-gray-900 hover:bg-gray-700 text-gray-300'  // 기본 상태
           }`}
-        onClick={toggleIsFixBackground}>
-        {isFixBackground ? '해제' : '잠금'}
+        onClick={toggleIsBackgroundLocked}>
+        {isBackgroundLocked ? '수정' : '완료'}
       </button>
+      <p
+        className={`px-2 py-1 rounded border border-gray-600 transition-colors duration-200 select-none cursor-not-allowed
+        ${!isBackgroundLocked 
+          ? 'bg-gray-700 text-white shadow-inner'  // 눌린 상태
+          : 'bg-gray-900 text-gray-300'  // 기본 상태
+        }`}
+      >{isBackgroundLocked ? '🔓' : '🔒'}</p> */}
     </div>
   )
 }

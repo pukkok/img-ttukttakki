@@ -3,8 +3,8 @@ import { fabric } from 'fabric'
 import { useMergeCanvasStore } from '../../../stores/useMergeCanvasStore'
 
 export const useBackgroundImage = (fabricCanvasRef) => {
-  const backgroundImage = useMergeCanvasStore(s => s.backgroundImageUrl)
-  const isLockBackground = useMergeCanvasStore(s => s.isLockBackground)
+  const backgroundImageUrl = useMergeCanvasStore(s => s.backgroundImageUrl)
+  const isBackgroundLocked = useMergeCanvasStore(s => s.isBackgroundLocked)
   const setBackgroundImageInfo = useMergeCanvasStore(s => s.setBackgroundImageInfo)
 
   // INFO: 배경이벤트 등록
@@ -49,13 +49,13 @@ export const useBackgroundImage = (fabricCanvasRef) => {
     const existingBg = canvas.getObjects().find(obj => obj.customType === 'background')
     if (existingBg) canvas.remove(existingBg)
 
-    if (!backgroundImage) { // INFO: 배경 삽입이 잘못된 경우
+    if (!backgroundImageUrl) { // INFO: 배경 삽입이 잘못된 경우
       setBackgroundImageInfo(null)
       canvas.renderAll()
       return
     }
 
-    fabric.Image.fromURL(backgroundImage, (bgImg) => {
+    fabric.Image.fromURL(backgroundImageUrl, (bgImg) => {
       if (!bgImg) return
 
       const canvasWidth = canvas.getWidth()
@@ -96,7 +96,7 @@ export const useBackgroundImage = (fabricCanvasRef) => {
       canvas.setActiveObject(bgImg)
       canvas.requestRenderAll()
     }, { crossOrigin: 'anonymous' }) // 이미지가 외부일 경우를 위해
-  }, [backgroundImage])
+  }, [backgroundImageUrl])
 
   // INFO: 배경 잠금시 처리
   useEffect(() => {
@@ -107,15 +107,14 @@ export const useBackgroundImage = (fabricCanvasRef) => {
     if (!bgObj) return
 
     bgObj.set({
-      selectable: !isLockBackground,
-      evented: !isLockBackground,
-      hasControls: !isLockBackground,
+      selectable: !isBackgroundLocked,
+      evented: !isBackgroundLocked,
+      hasControls: !isBackgroundLocked,
     })
 
-    if (isLockBackground) {
+    if (isBackgroundLocked) {
       canvas.discardActiveObject()
     }
-    console.log('동작해?')
     canvas.requestRenderAll()
-  }, [isLockBackground])
+  }, [isBackgroundLocked])
 }
