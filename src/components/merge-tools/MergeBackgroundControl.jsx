@@ -66,22 +66,6 @@ const MergeBackgroundControl = ({ fabricCanvasRef }) => {
         isEditMode={!isBackgroundLocked}
         onToggle={toggleIsBackgroundLocked}
       />
-      {/* <button 
-        className={`px-3 py-1 rounded border border-gray-600 transition-colors duration-200 cursor-pointer
-          ${isBackgroundLocked 
-            ? 'bg-gray-700 text-white shadow-inner'  // 눌린 상태
-            : 'bg-gray-900 hover:bg-gray-700 text-gray-300'  // 기본 상태
-          }`}
-        onClick={toggleIsBackgroundLocked}>
-        {isBackgroundLocked ? '수정' : '완료'}
-      </button>
-      <p
-        className={`px-2 py-1 rounded border border-gray-600 transition-colors duration-200 select-none cursor-not-allowed
-        ${!isBackgroundLocked 
-          ? 'bg-gray-700 text-white shadow-inner'  // 눌린 상태
-          : 'bg-gray-900 text-gray-300'  // 기본 상태
-        }`}
-      >{isBackgroundLocked ? '🔓' : '🔒'}</p> */}
     </div>
   )
 }
