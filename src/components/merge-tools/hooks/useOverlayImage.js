@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { FabricImage } from 'fabric'
+import { fabric } from 'fabric'
 import { useCommonStore } from '../../../stores/useCommonStore'
 
 export const useOverlayImage = (fabricCanvasRef, overlayImageRef) => {
@@ -9,7 +9,6 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef) => {
   const currentIndex = getCurrentIndex()
   const currentImage = images[currentIndex] || null
 
-  // 1. 조작 감지하여 imageRef에 저장
   useEffect(() => {
     const canvas = fabricCanvasRef.current
     if (!canvas) return
@@ -42,23 +41,27 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef) => {
     }
   }, [currentImage?.id])
 
-  // 2. 이미지 로드 및 위치 복원
   useEffect(() => {
     const loadImage = async () => {
       const canvas = fabricCanvasRef.current
       if (!canvas || !currentImage?.url) return
 
-      // 기존 overlay 객체 제거 (배경 제외)
       canvas.getObjects().forEach(obj => {
-        if (obj.customType !== 'background') {
+        if (obj.customType === 'overlay') {
           canvas.remove(obj)
         }
       })
 
       try {
-        const img = await FabricImage.fromURL(currentImage.url)
+        const img = await new Promise((resolve, reject) => {
+          fabric.Image.fromURL(currentImage.url, (img) => {
+            if (img) resolve(img)
+            else reject(new Error('Image load error'))
+          })
+        })
 
         const saved = overlayImageRef.current[currentImage.id]
+
         const defaultLeft = canvas.getWidth() / 2
         const defaultTop = canvas.getHeight() / 2
 
@@ -81,7 +84,7 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef) => {
 
         canvas.add(img)
         canvas.setActiveObject(img)
-        canvas.renderAll()
+        canvas.requestRenderAll()
       } catch (err) {
         console.error('작업 이미지 불러오기 실패:', err)
       }
@@ -89,5 +92,4 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef) => {
 
     loadImage()
   }, [currentImage])
-
 }
