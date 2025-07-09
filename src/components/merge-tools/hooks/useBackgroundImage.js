@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { fabric } from 'fabric'
 import { useMergeCanvasStore } from '../../../stores/useMergeCanvasStore'
 
-export const useBackgroundImage = (fabricCanvasRef) => {
+export const useBackgroundImage = (fabricCanvasRef, onLoaded) => {
   const backgroundImageUrl = useMergeCanvasStore(s => s.backgroundImageUrl)
   const isBackgroundLocked = useMergeCanvasStore(s => s.isBackgroundLocked)
   const setBackgroundImageInfo = useMergeCanvasStore(s => s.setBackgroundImageInfo)
@@ -65,14 +65,14 @@ export const useBackgroundImage = (fabricCanvasRef) => {
       const scale = targetHeight / bgImg.height
       const scaledWidth = bgImg.width * scale
       const scaledHeight = bgImg.height * scale
-      const left = (canvasWidth - scaledWidth) / 2
-      const top = (canvasHeight - scaledHeight) / 2
 
       bgImg.set({
-        left,
-        top,
+        left: canvasWidth / 2,
+        top: canvasHeight / 2,
         scaleX: scale,
         scaleY: scale,
+        originX: 'center',
+        originY: 'center',
         angle: 0,
         skewX: 0,
         skewY: 0,
@@ -83,18 +83,22 @@ export const useBackgroundImage = (fabricCanvasRef) => {
       })
 
       canvas.add(bgImg)
+      canvas.sendToBack(bgImg)
       setBackgroundImageInfo({
         width: scaledWidth,
         height: scaledHeight,
-        left,
-        top,
+        left: canvasWidth / 2,
+        top: canvasHeight / 2,
         rotation: 0,
         skewX: 0,
         skewY: 0,
       })
       
       canvas.setActiveObject(bgImg)
-      canvas.requestRenderAll()
+
+      if (typeof onLoaded === 'function') {
+        onLoaded()
+      }
     }, { crossOrigin: 'anonymous' }) // 이미지가 외부일 경우를 위해
   }, [backgroundImageUrl])
 

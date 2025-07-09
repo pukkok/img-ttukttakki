@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react"
+import { useRef } from "react"
 import { useBackgroundImage } from "./hooks/useBackgroundImage"
 import { useSetupCanvas } from "./hooks/useSetupCanvas"
 import { useOverlayImage } from "./hooks/useOverlayImage"
@@ -8,10 +8,10 @@ const MergeCanvasEditor = ({ fabricCanvasRef, overlayImageRef, cropCanvasRef }) 
   const canvasRef = useRef(null)
 
   useSetupCanvas(canvasRef, fabricCanvasRef)
-  useBackgroundImage(fabricCanvasRef)
-  useOverlayImage(fabricCanvasRef, overlayImageRef)
-  useCropBox(fabricCanvasRef, cropCanvasRef)
-  
+  const { updateMask } = useCropBox(fabricCanvasRef, cropCanvasRef)
+  useBackgroundImage(fabricCanvasRef, updateMask)
+  useOverlayImage(fabricCanvasRef, overlayImageRef, updateMask)
+
   return <canvas ref={canvasRef} />
 }
 
