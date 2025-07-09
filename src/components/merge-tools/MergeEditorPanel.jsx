@@ -1,20 +1,20 @@
 import MergeBackgroundUpload from './MergeBackgroundUpload'
 import MergeBackgroundControl from './MergeBackgroundControl'
-import { useMergeCanvasStore } from '../../stores/useMergeCanvasStore'
+import MergeCropControl from './MergeCropControl'
 
-const MergeEditorPanel = ({ backgroundRef }) => {
-
-  const backgroundImageInfo = useMergeCanvasStore(s => s.backgroundImageInfo)
+const MergeEditorPanel = ({ fabricCanvasRef, cropCanvasRef }) => {
 
   return (
     <div className="flex flex-col gap-3 px-4 py-3 text-sm text-white">
       <MergeBackgroundUpload />
 
-      {backgroundImageInfo && 
       <MergeBackgroundControl 
-        backgroundImageInfo={backgroundImageInfo}
-        backgroundRef={backgroundRef}
-      />}
+        fabricCanvasRef={fabricCanvasRef}
+      />
+
+      <MergeCropControl 
+        cropCanvasRef={cropCanvasRef}
+      />
     </div>
   )
 }
