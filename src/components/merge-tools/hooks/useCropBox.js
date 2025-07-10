@@ -113,12 +113,10 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
     const defaultHeight = 400
 
     const cropBox = new fabric.Rect({
-      left: canvasWidth / 2,
-      top: canvasHeight / 2,
+      left: canvasWidth / 2 - defaultWidth / 2,
+      top: canvasHeight / 2 - defaultHeight / 2,
       width: defaultWidth,
       height: defaultHeight,
-      originX: 'center',
-      originY: 'center',
       fill: 'transparent',
       stroke: '#10B981',
       strokeWidth:1,

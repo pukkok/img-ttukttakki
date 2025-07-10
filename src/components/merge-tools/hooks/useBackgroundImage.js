@@ -67,12 +67,12 @@ export const useBackgroundImage = (fabricCanvasRef, onLoaded) => {
       const scaledHeight = bgImg.height * scale
 
       bgImg.set({
-        left: canvasWidth / 2,
-        top: canvasHeight / 2,
+        left: canvasWidth / 2 - scaledWidth / 2,
+        top: canvasHeight / 2 - scaledHeight / 2,
+        width: bgImg.width,
+        height: bgImg.height,
         scaleX: scale,
         scaleY: scale,
-        originX: 'center',
-        originY: 'center',
         angle: 0,
         skewX: 0,
         skewY: 0,
