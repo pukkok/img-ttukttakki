@@ -3,6 +3,7 @@ import ImageUploader from './ImageUploader'
 import ImageList from './ImageList'
 import DownloadButtonsCrop from './DownloadButtonsCrop'
 import DownloadButtonsSplit from './DownloadButtonsSplit'
+import DownloadButtonsMerge from './DownloadButtonsMerge'
 
 const Sidebar = ({
   onImagesSelected,
@@ -52,6 +53,10 @@ const Sidebar = ({
         {location.pathname === '/crop' && 
         <DownloadButtonsCrop
           shape={shape}
+          getCanvas={getCanvas}
+        />}
+        {location.pathname === '/merge' &&
+        <DownloadButtonsMerge 
           getCanvas={getCanvas}
         />}
       </div>
