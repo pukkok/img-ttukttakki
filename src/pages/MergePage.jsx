@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import MergeCanvasEditor from '../components/merge-tools/MergeCanvasEditor'
 import MergeEditorPanel from '../components/merge-tools/MergeEditorPanel'
 import Sidebar from '../components/sidebar'
@@ -19,11 +19,15 @@ const MergePage = () => {
 
   const getMergedCanvas = async (targetId) => {
     const originalCanvas = fabricCanvasRef.current
-    if (!originalCanvas || !targetId) return null
+    // if (!originalCanvas || !targetId) return null
 
     const bgObj = originalCanvas.getObjects().find(obj => obj.customType === 'background')
     const overlayInfo = overlayImageRef.current[targetId]
-    if (!bgObj || !overlayInfo?.img) return null
+    if (!bgObj) {
+      alert('배경 이미지를 넣어주세요.')
+      return console.error('배경이미지 없음.')
+    }
+    if (!overlayInfo?.img) return alert('병합할 이미지가 없습니다.')
     
     const { cropBoxInfo } = useMergeCanvasStore.getState()
     const { left: cropLeft, top: cropTop, width: cropW, height: cropH } = cropBoxInfo
@@ -72,6 +76,29 @@ const MergePage = () => {
     }
   }
 
+  const handleClearAllImages = () => {
+    setImages([])
+    overlayImageRef.current = {}
+
+    const canvas = fabricCanvasRef.current
+    if (canvas) {
+      canvas.getObjects().forEach(obj => {
+        if (obj.customType === 'overlay') {
+          canvas.remove(obj)
+        }
+      })
+      canvas.discardActiveObject()
+      canvas.requestRenderAll()
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      useCommonStore.getState().resetCommonStates()
+      useMergeCanvasStore.getState().resetMergeCanvasStates()
+    }
+  }, [])
+
   return (
     <div className="flex h-screen bg-[#111] text-white overflow-hidden">
       <div className="flex flex-col flex-1 overflow-hidden">
@@ -104,7 +131,7 @@ const MergePage = () => {
           setImages(newImages)
           setCurrentImageId(newImages[0]?.id || null)
         }}
-        onClearAllImages={() => setImages([])}
+        onClearAllImages={handleClearAllImages}
         allowMultiple={true}
         getCanvas={getMergedCanvas}
         onDeleteImageId={handleDeleteImage}

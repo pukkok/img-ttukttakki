@@ -11,7 +11,7 @@ const DownloadButtonsMerge = ({ getCanvas }) => {
   const [isSavingAll, setIsSavingAll] = useState(false)
 
   const handleSaveCurrent = async () => {
-    if (!getCanvas || !currentImageId) return
+    if (!getCanvas || !currentImageId) return alert('저장할 이미지가 없습니다.')
     setIsSavingCurrent(true)
 
     try {
@@ -31,7 +31,7 @@ const DownloadButtonsMerge = ({ getCanvas }) => {
   }
 
   const handleSaveAll = async () => {
-    if (!getCanvas || !images.length) return
+    if (!getCanvas || !images.length) return alert('저장할 이미지가 없습니다.')
     setIsSavingAll(true)
 
     try {
@@ -39,7 +39,7 @@ const DownloadButtonsMerge = ({ getCanvas }) => {
 
       for (const image of images) {
         const canvas = await getCanvas(image.id)
-        if (!canvas) continue
+        if (!canvas) return
 
         const blob = await new Promise(resolve =>
           canvas.toBlob(resolve, 'image/png')
@@ -63,7 +63,7 @@ const DownloadButtonsMerge = ({ getCanvas }) => {
         className={`px-4 py-2 rounded text-white text-sm ${
           isSavingCurrent ? 'bg-gray-600' : 'bg-[#10B981] hover:bg-[#0ea672]'
         }`}
-        disabled={isSavingCurrent || !images.length}
+        // disabled={isSavingCurrent || !images.length}
       >
         💾 현재 저장
       </button>
