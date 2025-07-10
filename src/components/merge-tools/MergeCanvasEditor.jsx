@@ -8,9 +8,9 @@ const MergeCanvasEditor = ({ fabricCanvasRef, overlayImageRef, cropCanvasRef }) 
   const canvasRef = useRef(null)
 
   useSetupCanvas(canvasRef, fabricCanvasRef)
-  const { updateMask } = useCropBox(fabricCanvasRef, cropCanvasRef)
-  useBackgroundImage(fabricCanvasRef, updateMask)
-  useOverlayImage(fabricCanvasRef, overlayImageRef, updateMask)
+  const { bringCropBoxToFront } = useCropBox(fabricCanvasRef, cropCanvasRef)
+  useBackgroundImage(fabricCanvasRef, bringCropBoxToFront)
+  useOverlayImage(fabricCanvasRef, overlayImageRef, bringCropBoxToFront)
 
   return <canvas ref={canvasRef} />
 }

@@ -17,7 +17,7 @@ const MergeBackgroundControl = ({ fabricCanvasRef }) => {
 
   const formatNumber = (num) => {
     if (typeof num !== 'number') return num
-    return Number.isInteger(num) ? num.toString() : num.toFixed(2)
+    return Number.isInteger(num) ? num.toString() : Math.round(num)
   }
 
   const handleChange = (key, value) => {
