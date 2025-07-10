@@ -120,7 +120,7 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
       fill: 'transparent',
       stroke: '#10B981',
       strokeWidth:1,
-      strokeUniform: true, // <== 요거
+      strokeUniform: true,
       hasRotatingPoint: false,
       lockRotation: true,
       lockSkewingX: true,
@@ -132,6 +132,11 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
       hasControls: selectCrop,
       scaleX: 1,
       scaleY: 1,
+    })
+
+    // INFO: rotate 핸들러를 제거한다.
+    cropBox.setControlsVisibility({
+      mtr: false,
     })
 
     const createMask = () =>

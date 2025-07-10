@@ -81,6 +81,7 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef, onLoaded) => {
         selectable: true,
         evented: true,
         hasControls: true,
+        cornerStyle: 'circle',
         customType: 'overlay',
       })
 

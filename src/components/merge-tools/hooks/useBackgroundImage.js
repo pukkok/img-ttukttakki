@@ -76,6 +76,7 @@ export const useBackgroundImage = (fabricCanvasRef, onLoaded) => {
         angle: 0,
         skewX: 0,
         skewY: 0,
+        cornerStyle: 'circle',
         selectable: true,
         evented: true,
         hasControls: true,
