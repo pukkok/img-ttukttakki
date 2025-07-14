@@ -20,13 +20,23 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef, onLoaded) => {
       const ref = overlayImageRef.current[currentImage.id]
       if (!ref) return
 
-      ref.left = obj.left
-      ref.top = obj.top
-      ref.width = obj.width * obj.scaleX
-      ref.height = obj.height * obj.scaleY
-      ref.angle = obj.angle || 0
-      ref.skewX = obj.skewX || 0
-      ref.skewY = obj.skewY || 0
+      ref.left = Math.round(obj.left)
+      ref.top = Math.round(obj.top)
+      ref.scaleX = +obj.scaleX.toFixed(3)
+      ref.scaleY = +obj.scaleY.toFixed(3)
+      ref.angle = Math.round(obj.angle)
+      ref.skewX = +obj.skewX.toFixed(2)
+      ref.skewY = +obj.skewY.toFixed(2)
+
+      obj.set({
+        left: Math.round(obj.left),
+        top: Math.round(obj.top),
+        scaleX: +obj.scaleX.toFixed(3),
+        scaleY: +obj.scaleY.toFixed(3),
+        angle: Math.round(obj.angle),
+        skewX: +obj.skewX.toFixed(2),
+        skewY: +obj.skewY.toFixed(2),
+      })
     }
 
     canvas.on('object:modified', handleModified)
@@ -65,8 +75,8 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef, onLoaded) => {
 
       const scaledWidth = img.width * scale
       const scaledHeight = img.height * scale
-      const left = canvasWidth / 2 - scaledWidth / 2
-      const top = canvasHeight / 2 - scaledHeight / 2
+      const left = Math.round(canvasWidth / 2 - scaledWidth / 2)
+      const top = Math.round(canvasHeight / 2 - scaledHeight / 2)
 
       img.set({
         left,
@@ -119,12 +129,7 @@ export const useOverlayImage = (fabricCanvasRef, overlayImageRef, onLoaded) => {
         scaleY,
         angle,
         skewX,
-        skewY,
-        cornerStyle: 'circle',
-        selectable: true,
-        evented: true,
-        hasControls: true,
-        customType: 'overlay',
+        skewY
       })
 
       saved.img = img

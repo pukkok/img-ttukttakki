@@ -6,8 +6,7 @@ export const useMergeCanvasStore = create((set, get) => ({
 
   backgroundImageInfo: {
     rotation: 0, skewX: 0, skewY: 0,
-    width: 0, height: 0,
-    left: 0, top: 0,
+    width: 0, height: 0
   },
   setBackgroundImageInfo: (info) => set({ backgroundImageInfo: info }),
 
@@ -18,7 +17,7 @@ export const useMergeCanvasStore = create((set, get) => ({
   toggleSelectCrop: () => set({selectCrop: !get().selectCrop}),
   
   cropBoxInfo: {
-    width: 0, hegiht: 0, left: 0, top: 0
+    width: 0, hegiht: 0
   },
   setCropBoxInfo: (info) => set({ cropBoxInfo: info }),
 
@@ -26,8 +25,7 @@ export const useMergeCanvasStore = create((set, get) => ({
     backgroundImageUrl: null,
     backgroundImageInfo: {
       rotation: 0, skewX: 0, skewY: 0,
-      width: 0, height: 0,
-      left: 0, top: 0,
+      width: 0, height: 0
     },
     isBackgroundLocked: false,
   }),

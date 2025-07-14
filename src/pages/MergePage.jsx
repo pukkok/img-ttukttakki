@@ -19,28 +19,34 @@ const MergePage = () => {
 
   const getMergedCanvas = async (targetId) => {
     const originalCanvas = fabricCanvasRef.current
-    // if (!originalCanvas || !targetId) return null
-
+    
     const bgObj = originalCanvas.getObjects().find(obj => obj.customType === 'background')
     const overlayInfo = overlayImageRef.current[targetId]
     if (!bgObj) {
       alert('배경 이미지를 넣어주세요.')
       return console.error('배경이미지 없음.')
     }
-    if (!overlayInfo?.img) return alert('병합할 이미지가 없습니다.')
     
-    const { cropBoxInfo } = useMergeCanvasStore.getState()
-    const { left: cropLeft, top: cropTop, width: cropW, height: cropH } = cropBoxInfo
+    const { left: cropLeft, top: cropTop, width: cropW, height: cropH, scaleX, scaleY } = cropCanvasRef.current
 
     const canvasEl = document.createElement('canvas')
-    canvasEl.width = cropW
-    canvasEl.height = cropH
-    const mergedCanvas = new fabric.Canvas(canvasEl, { width: cropW, height: cropH})
+    canvasEl.style.backgroundColor = '#fff'
+
+    const pixelWidth = Math.round(cropW * scaleX)
+    const pixelHeight = Math.round(cropH * scaleY)
+    canvasEl.width = pixelWidth
+    canvasEl.height = pixelHeight
+
+    const mergedCanvas = new fabric.Canvas(canvasEl, { width: pixelWidth, height: pixelHeight })
     
     const bgClone = await new Promise(resolve => bgObj.clone(resolve))
+
     const adjustedBgLeft = bgObj.left - cropLeft
     const adjustedBgTop = bgObj.top - cropTop
-    bgClone.set({ left: adjustedBgLeft, top: adjustedBgTop })
+    const { width, height, rotation, skewX, skewY } = useMergeCanvasStore.getState().backgroundImageInfo
+    bgClone.set({ left: adjustedBgLeft, top: adjustedBgTop, width: width, height: height
+      // scaleX: +bgObj.scaleX.toFixed(2), scaleY: +bgObj.scaleY.toFixed(2) 
+    })
     mergedCanvas.add(bgClone)
 
     const adjustedOverlayLeft = overlayInfo.left - cropLeft
@@ -49,7 +55,7 @@ const MergePage = () => {
     overlayClone.set({ left: adjustedOverlayLeft, top: adjustedOverlayTop })
     mergedCanvas.add(overlayClone)
 
-    mergedCanvas.renderAll()
+    mergedCanvas.requestRenderAll()
 
     return mergedCanvas.lowerCanvasEl
   }

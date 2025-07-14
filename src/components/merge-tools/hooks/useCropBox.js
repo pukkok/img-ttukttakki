@@ -32,21 +32,22 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
   const updateMask = () => {
     const canvas = fabricCanvasRef.current
     const cropBox = cropCanvasRef.current
+
     const masks = maskRefs.current
     if (!canvas || !cropBox) return
 
-    const { left, top, width, height, scaleX, scaleY, originX, originY } = cropBox
-    
-    const actualWidth = width * scaleX
-    const actualHeight = height * scaleY
+    const { left, top, width, height, scaleX, scaleY } = cropBox
 
-    const boxLeft = originX === 'center' ? left - actualWidth / 2 : left
-    const boxTop = originY === 'center' ? top - actualHeight / 2 : top
-    const boxRight = boxLeft + actualWidth
-    const boxBottom = boxTop + actualHeight
+    const actualWidth = Math.round(width * scaleX)
+    const actualHeight = Math.round(height * scaleY)
 
-    const canvasWidth = canvas.getWidth()
-    const canvasHeight = canvas.getHeight()
+    const boxLeft = Math.round(left)
+    const boxTop = Math.round(top)
+    const boxRight = Math.round(boxLeft + actualWidth)
+    const boxBottom = Math.round(boxTop + actualHeight)
+
+    const canvasWidth = Math.round(canvas.getWidth())
+    const canvasHeight = Math.round(canvas.getHeight())
 
     // 좌상단
     masks.topLeft.set({
@@ -88,9 +89,15 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
       left: boxRight, top: boxBottom, width: canvasWidth - boxRight, height: canvasHeight - boxBottom,
     })
 
+    cropBox.set({
+      left: Math.round(left),
+      top: Math.round(top),
+      scaleX: +scaleX.toFixed(3),
+      scaleY: +scaleY.toFixed(3)
+    })
+
     bringCropBoxToFront()
     setCropBoxInfo({
-      left, top,
       width: actualWidth, height: actualHeight
     })
     canvas.requestRenderAll()
@@ -100,29 +107,20 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
     const canvas = fabricCanvasRef.current
     if (!canvas) return
 
-    const existing = canvas.getObjects().find(obj => obj.customType === 'cropBox')
-    if (existing) {
-      cropCanvasRef.current = existing
-      updateMask()
-      return
-    }
-
     const canvasWidth = canvas.getWidth()
     const canvasHeight = canvas.getHeight()
     const defaultWidth = 400
     const defaultHeight = 400
 
     const cropBox = new fabric.Rect({
-      left: canvasWidth / 2 - defaultWidth / 2,
-      top: canvasHeight / 2 - defaultHeight / 2,
+      left: Math.round(canvasWidth / 2 - defaultWidth / 2),
+      top: Math.round(canvasHeight / 2 - defaultHeight / 2),
       width: defaultWidth,
       height: defaultHeight,
       fill: 'transparent',
       stroke: '#10B981',
-      strokeWidth:1,
+      strokeWidth: 1,
       strokeUniform: true,
-      hasRotatingPoint: false,
-      lockRotation: true,
       lockSkewingX: true,
       lockSkewingY: true,
       cornerStyle: 'circle',
@@ -135,9 +133,7 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
     })
 
     // INFO: rotate 핸들러를 제거한다.
-    cropBox.setControlsVisibility({
-      mtr: false,
-    })
+    cropBox.setControlsVisibility({ mtr: false })
 
     const createMask = () =>
       new fabric.Rect({
@@ -155,13 +151,12 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
     }
 
     canvas.add(cropBox)
-    canvas.add(...Object.values(maskRefs.current))
     cropCanvasRef.current = cropBox
+    updateMask()
 
     canvas.on('object:modified', updateMask)
     canvas.on('object:moving', updateMask)
     canvas.on('object:scaling', updateMask)
-    updateMask()
 
     return () => {
       canvas.off('object:modified', updateMask)
@@ -188,5 +183,5 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
     updateMask()
   }, [cropBoxInfo.width, cropBoxInfo.height])
 
-  return { updateMask }
+  return { updateMask, bringCropBoxToFront }
 }
