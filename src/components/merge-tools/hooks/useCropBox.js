@@ -188,5 +188,5 @@ export const useCropBox = (fabricCanvasRef, cropCanvasRef) => {
     updateMask()
   }, [cropBoxInfo.width, cropBoxInfo.height])
 
-  return { updateMask }
+  return { bringCropBoxToFront }
 }
