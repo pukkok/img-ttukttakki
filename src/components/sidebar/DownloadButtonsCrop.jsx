@@ -3,8 +3,9 @@ import { saveAs } from 'file-saver'
 import { useState } from 'react'
 import { useCommonStore } from '../../stores/useCommonStore'
 
-const DownloadButtonsCrop = ({ currentImageId, shape, getCanvas }) => {
+const DownloadButtonsCrop = ({ shape, getCanvas }) => {
   const images = useCommonStore(s => s.images)
+  const currentImageId = useCommonStore(s => s.currentImageId)
 
   const [isSavingCurrent, setIsSavingCurrent] = useState(false)
   const [isSavingAll, setIsSavingAll] = useState(false)
